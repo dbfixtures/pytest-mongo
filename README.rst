@@ -1,4 +1,4 @@
-.. image:: https://raw.githubusercontent.com/ClearcodeHQ/pytest-mongo/master/logo.png
+.. image:: https://raw.githubusercontent.com/dbfixtures/pytest-mongo/master/logo.png
     :width: 100px
     :height: 100px
     
@@ -155,4 +155,4 @@ Example usage:
 Package resources
 -----------------
 
-* Bug tracker: https://github.com/ClearcodeHQ/pytest-mongo/issues
+* Bug tracker: https://github.com/dbfixtures/pytest-mongo/issues

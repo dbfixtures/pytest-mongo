@@ -9,13 +9,13 @@ CHANGELOG
 Features
 --------
 
-- Support Python 3.12 (`#507 <https://github.com/ClearcodeHQ/pytest-mongo/issues/507>`__)
+- Support Python 3.12 (`#507 <https://github.com/dbfixtures/pytest-mongo/issues/507>`__)
 
 
 Miscellaneus
 ------------
 
-- `#486 <https://github.com/ClearcodeHQ/pytest-mongo/issues/486>`__, `#488 <https://github.com/ClearcodeHQ/pytest-mongo/issues/488>`__, `#508 <https://github.com/ClearcodeHQ/pytest-mongo/issues/508>`__
+- `#486 <https://github.com/dbfixtures/pytest-mongo/issues/486>`__, `#488 <https://github.com/dbfixtures/pytest-mongo/issues/488>`__, `#508 <https://github.com/dbfixtures/pytest-mongo/issues/508>`__
 
 
 3.0.0 (2023-07-20)
@@ -24,20 +24,20 @@ Miscellaneus
 Breaking changes
 ----------------
 
-- Dropped support for python 3.7 (`#384 <https://github.com/ClearcodeHQ/pytest-mongo/issues/384>`__)
+- Dropped support for python 3.7 (`#384 <https://github.com/dbfixtures/pytest-mongo/issues/384>`__)
 
 
 Features
 --------
 
-- Add typing and check types on CI (`#384 <https://github.com/ClearcodeHQ/pytest-mongo/issues/384>`__)
-- Officially support python 3.11 (`#385 <https://github.com/ClearcodeHQ/pytest-mongo/issues/385>`__)
+- Add typing and check types on CI (`#384 <https://github.com/dbfixtures/pytest-mongo/issues/384>`__)
+- Officially support python 3.11 (`#385 <https://github.com/dbfixtures/pytest-mongo/issues/385>`__)
 
 
 Miscellaneus
 ------------
 
-- `#379 <https://github.com/ClearcodeHQ/pytest-mongo/issues/379>`__, `#380 <https://github.com/ClearcodeHQ/pytest-mongo/issues/380>`__, `#381 <https://github.com/ClearcodeHQ/pytest-mongo/issues/381>`__, `#382 <https://github.com/ClearcodeHQ/pytest-mongo/issues/382>`__, `#383 <https://github.com/ClearcodeHQ/pytest-mongo/issues/383>`__, `#386 <https://github.com/ClearcodeHQ/pytest-mongo/issues/386>`__, `#394 <https://github.com/ClearcodeHQ/pytest-mongo/issues/394>`__, `#419 <https://github.com/ClearcodeHQ/pytest-mongo/issues/419>`__
+- `#379 <https://github.com/dbfixtures/pytest-mongo/issues/379>`__, `#380 <https://github.com/dbfixtures/pytest-mongo/issues/380>`__, `#381 <https://github.com/dbfixtures/pytest-mongo/issues/381>`__, `#382 <https://github.com/dbfixtures/pytest-mongo/issues/382>`__, `#383 <https://github.com/dbfixtures/pytest-mongo/issues/383>`__, `#386 <https://github.com/dbfixtures/pytest-mongo/issues/386>`__, `#394 <https://github.com/dbfixtures/pytest-mongo/issues/394>`__, `#419 <https://github.com/dbfixtures/pytest-mongo/issues/419>`__
 
 
 2.1.1
