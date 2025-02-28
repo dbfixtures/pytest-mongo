@@ -3,6 +3,31 @@ CHANGELOG
 
 .. towncrier release notes start
 
+3.2.0 (2025-02-28)
+==================
+
+Breaking changes
+----------------
+
+- Dropped Python 3.8 from CI and support
+
+
+Features
+--------
+
+- Declare support for Python 3.13 (`#609 <https://github.com/dbfixtures/pytest-mongo/issues/609>`__)
+
+
+Miscellaneus
+------------
+
+- Add MongoDB 8.0 support to CI
+- Adjust links after repository transfer
+- Adjust workflows for actions-reuse 3
+- Pin OS to Ubuntu 22.04 for Mongo 7 and 6 tests.
+- Use pre-commit for maintaining code style and linting
+
+
 3.1.0 (2024-03-13)
 ==================
 

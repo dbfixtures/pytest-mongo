@@ -1,1 +1,0 @@
-Add MongoDB 8.0 support to CI

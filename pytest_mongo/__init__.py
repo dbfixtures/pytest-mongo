@@ -18,4 +18,4 @@
 # along with pytest-mongo.  If not, see <http://www.gnu.org/licenses/>.
 """pytest-mongo's main module."""
 
-__version__ = "3.1.0"
+__version__ = "3.2.0"
