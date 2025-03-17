@@ -11,10 +11,7 @@ pymongo = "==4.11.2"
 
 [dev-packages]
 towncrier = "==24.8.0"
-black = "==25.1.0"
 pytest-cov = "==6.0.0"
 pytest-xdist = "==3.6.1"
-ruff = "==0.11.0"
 mypy = "==1.15.0"
 tbump = "==6.11.0"
-rstcheck = {version = "==6.2.4", extras = ["sphinx"]}
