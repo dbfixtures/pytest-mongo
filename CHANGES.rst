@@ -3,6 +3,15 @@ CHANGELOG
 
 .. towncrier release notes start
 
+3.2.1 (2025-08-01)
+==================
+
+Bugfixes
+--------
+
+- Add missing py.typed file. (`#663 <https://github.com/dbfixtures/pytest-mongo/issues/663>`__)
+
+
 3.2.0 (2025-02-28)
 ==================
 

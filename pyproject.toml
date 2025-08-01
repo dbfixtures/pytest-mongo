@@ -1,6 +1,6 @@
 [project]
 name = "pytest-mongo"
-version = "3.2.0"
+version = "3.2.1"
 description = "MongoDB process and client fixtures plugin for Pytest."
 readme = "README.rst"
 keywords = ["tests", "pytest", "fixture", "mongodb", "mongo"]
@@ -38,7 +38,7 @@ requires-python = ">= 3.9"
 [project.urls]
 "Source" = "https://github.com/dbfixtures/pytest-mongo"
 "Bug Tracker" = "https://github.com/dbfixtures/pytest-mongo/issues"
-"Changelog" = "https://github.com/dbfixtures/pytest-mongo/blob/v3.2.0/CHANGES.rst"
+"Changelog" = "https://github.com/dbfixtures/pytest-mongo/blob/v3.2.1/CHANGES.rst"
 
 [project.entry-points."pytest11"]
 pytest_mongo = "pytest_mongo.plugin"
@@ -101,7 +101,7 @@ name = "Miscellaneus"
 showcontent = false
 
 [tool.tbump.version]
-current = "3.2.0"
+current = "3.2.1"
 
 # Example of a semver regexp.
 # Make sure this matches current_version before
