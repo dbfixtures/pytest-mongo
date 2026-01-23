@@ -18,10 +18,3 @@ jobs:
       mongo: 7.0
       os: ubuntu-22.04
       python-versions: '["3.9", "3.10", "3.11", "3.12", "3.13"]'
-  mongo_6:
-    needs: [mongo_8]
-    uses: ./.github/workflows/single-mongo.yml
-    with:
-      mongo: 6.0
-      os: ubuntu-22.04
-      python-versions: '["3.12", "3.13"]'
