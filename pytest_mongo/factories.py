@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-mongo.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factories."""
+
 import os
 from shutil import rmtree
 from tempfile import gettempdir
