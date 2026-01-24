@@ -1,0 +1,1 @@
+Add pre-commit hook to check Python version consistency in pyproject.toml.
