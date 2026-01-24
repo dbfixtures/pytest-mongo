@@ -1,7 +1,7 @@
 """Mongo config getter."""
 
 from pathlib import Path
-from typing import Any, Optional, TypedDict
+from typing import Any, TypedDict
 
 from pytest import FixtureRequest
 
@@ -11,7 +11,7 @@ class MongoConfigDict(TypedDict):
 
     exec: str
     host: str
-    port: Optional[int]
+    port: int | None
     params: str
     logsdir: Path
     tz_aware: bool
