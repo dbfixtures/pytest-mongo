@@ -14,7 +14,7 @@ def test_mongo(mongodb: MongoClient) -> None:
 
     database = mongodb["test_db"]
     database.test.insert_one(test_data)
-    assert database.test.find_one()["test1"] == "test1"  # type:ignore
+    assert database.test.find_one()["test1"] == "test1"  # type: ignore
 
 
 def test_third_mongo(
@@ -26,21 +26,21 @@ def test_third_mongo(
     }
     database = mongodb["test_db"]
     database.test.insert_one(test_data_one)
-    assert database.test.find_one()["test1"] == "test1"  # type:ignore
+    assert database.test.find_one()["test1"] == "test1"  # type: ignore
 
     test_data_two = {
         "test2": "test2",
     }
     database = mongodb2["test_db"]
     database.test.insert_one(test_data_two)
-    assert database.test.find_one()["test2"] == "test2"  # type:ignore
+    assert database.test.find_one()["test2"] == "test2"  # type: ignore
 
     test_data_three = {
         "test3": "test3",
     }
     database = mongodb3["test_db"]
     database.test.insert_one(test_data_three)
-    assert database.test.find_one()["test3"] == "test3"  # type:ignore
+    assert database.test.find_one()["test3"] == "test3"  # type: ignore
 
 
 def test_mongo_proc(
