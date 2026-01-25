@@ -18,3 +18,9 @@ jobs:
       mongo: 7.0
       os: ubuntu-22.04
       python-versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
+  oldest:
+    needs: [mongo_8]
+    uses: ./.github/workflows/tests-oldest.yml
+    with:
+      mongo: 7.0
+      os: ubuntu-22.04
