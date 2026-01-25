@@ -20,7 +20,7 @@
 import os
 from shutil import rmtree
 from tempfile import gettempdir
-from typing import Callable, Iterator, Optional
+from typing import Callable, Iterator
 
 import pytest
 from mirakuru import TCPExecutor
@@ -34,11 +34,11 @@ from pytest_mongo.executor_noop import NoopExecutor
 
 
 def mongo_proc(
-    executable: Optional[str] = None,
-    params: Optional[str] = None,
-    host: Optional[str] = None,
-    port: Optional[PortType] = -1,
-    logsdir: Optional[str] = None,
+    executable: str | None = None,
+    params: str | None = None,
+    host: str | None = None,
+    port: PortType | None = -1,
+    logsdir: str | None = None,
 ) -> Callable[[FixtureRequest], Iterator[TCPExecutor]]:
     """Mongo process fixture factory.
 
@@ -96,7 +96,7 @@ def mongo_proc(
 
 
 def mongo_noproc(
-    host: Optional[str] = None, port: Optional[int] = None
+    host: str | None = None, port: int | None = None
 ) -> Callable[[FixtureRequest], Iterator[NoopExecutor]]:
     """MongoDB noprocess factory.
 
@@ -128,7 +128,7 @@ def mongo_noproc(
 
 
 def mongodb(
-    process_fixture_name: str, tz_aware: Optional[bool] = None
+    process_fixture_name: str, tz_aware: bool | None = None
 ) -> Callable[[FixtureRequest], Iterator[MongoClient]]:
     """Mongo database factory.
 

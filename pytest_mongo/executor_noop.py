@@ -1,7 +1,5 @@
 """MongoDB Noop executor providing connection details for mongodb client."""
 
-from typing import Optional
-
 from pymongo import MongoClient
 
 
@@ -21,7 +19,7 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
         """
         self.host = host
         self.port = port
-        self._version: Optional[str] = None
+        self._version: str | None = None
 
     @property
     def version(self) -> str:
