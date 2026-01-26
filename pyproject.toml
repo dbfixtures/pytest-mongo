@@ -28,10 +28,10 @@ classifiers = [
     "Framework :: Pytest",
 ]
 dependencies = [
-    "pytest >= 6.2",
-    "port-for >= 0.6.0",
-    "mirakuru",
-    "pymongo",
+    "pytest >= 7.0",
+    "port-for >= 0.7.3",
+    "mirakuru >= 2.6.0",
+    "pymongo >= 4.10.0",
 ]
 requires-python = ">= 3.10"
 
@@ -57,7 +57,7 @@ namespaces = false
 
 [tool.pytest.ini_options]
 xfail_strict=true
-addopts = "--max-worker-restart=0 --showlocals --verbose --cov"
+addopts = "--showlocals --verbose --cov"
 testpaths = "tests"
 
 [tool.black]
