@@ -1,0 +1,3 @@
+Replace black with ruff-format.
+
+Should speed pre-commit up.

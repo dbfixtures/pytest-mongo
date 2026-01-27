@@ -35,15 +35,11 @@ _help_tz_aware = "Have mongo client timezone aware"
 
 def pytest_addoption(parser: Parser) -> None:
     """Configure pytest-mongo configuration options."""
-    parser.addini(
-        name="mongo_exec", help=_help_executable, default="/usr/bin/mongod"
-    )
+    parser.addini(name="mongo_exec", help=_help_executable, default="/usr/bin/mongod")
 
     parser.addini(name="mongo_params", help=_help_params, default="")
 
-    parser.addini(
-        name="mongo_logsdir", help=_help_logsdir, default=gettempdir()
-    )
+    parser.addini(name="mongo_logsdir", help=_help_logsdir, default=gettempdir())
 
     parser.addini(name="mongo_host", help=_help_host, default="127.0.0.1")
 
@@ -68,9 +64,7 @@ def pytest_addoption(parser: Parser) -> None:
         help=_help_executable,
     )
 
-    parser.addoption(
-        "--mongo-params", action="store", dest="mongo_params", help=_help_params
-    )
+    parser.addoption("--mongo-params", action="store", dest="mongo_params", help=_help_params)
 
     parser.addoption(
         "--mongo-logsdir",
@@ -87,9 +81,7 @@ def pytest_addoption(parser: Parser) -> None:
         help=_help_host,
     )
 
-    parser.addoption(
-        "--mongo-port", action="store", dest="mongo_port", help=_help_port
-    )
+    parser.addoption("--mongo-port", action="store", dest="mongo_port", help=_help_port)
 
     parser.addoption(
         "--mongo-tz-aware",
