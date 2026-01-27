@@ -17,9 +17,7 @@ def test_mongo(mongodb: MongoClient) -> None:
     assert database.test.find_one()["test1"] == "test1"  # type: ignore
 
 
-def test_third_mongo(
-    mongodb: MongoClient, mongodb2: MongoClient, mongodb3: MongoClient
-) -> None:
+def test_third_mongo(mongodb: MongoClient, mongodb2: MongoClient, mongodb3: MongoClient) -> None:
     """Test with everal mongo processes and connections."""
     test_data_one = {
         "test1": "test1",
