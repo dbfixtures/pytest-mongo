@@ -1,0 +1,3 @@
+Update pytest configuration options to be toml native, as pytest 9 accepts native toml configuration.
+
+Created configuration for the tests with the oldest supported packages versions .
