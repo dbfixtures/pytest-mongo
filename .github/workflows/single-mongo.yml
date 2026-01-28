@@ -45,13 +45,13 @@ jobs:
       with:
         mongodb-version: ${{ inputs.mongo }}
     - name: Run test
-      uses: fizyk/actions-reuse/.github/actions/pipenv@v4.1.1
+      uses: fizyk/actions-reuse/.github/actions/pipenv@v4.2.1
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
         command: pytest -n 0 --cov-report=xml
     - name: Run xdist test
-      uses: fizyk/actions-reuse/.github/actions/pipenv@v4.1.1
+      uses: fizyk/actions-reuse/.github/actions/pipenv@v4.2.1
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
