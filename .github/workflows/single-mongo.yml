@@ -55,7 +55,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
-        command: pytest -n 1 --max-worker-restart=0 --cov-report=xml:coverage-xdist.xml
+        command: pytest -n auto --dist loadgroup --max-worker-restart=0 --cov-report=xml:coverage-xdist.xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5.5.2
       with:

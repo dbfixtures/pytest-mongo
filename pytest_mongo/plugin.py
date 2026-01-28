@@ -26,6 +26,7 @@ _help_executable = "Path to MongoDB executable"
 _help_params = "Additional MongoDB parameters"
 _help_host = "Host at which MongoDB will accept connections"
 _help_port = "Port at which MongoDB will accept connections"
+_help_port_search_count = "Number of times, pytest-mongo will search for free port"
 _help_tz_aware = "Have mongo client timezone aware"
 
 
@@ -42,6 +43,7 @@ def pytest_addoption(parser: Parser) -> None:
         help=_help_port,
         default=None,
     )
+    parser.addini(name="mongo_port_search_count", help=_help_port_search_count, default=5)
 
     parser.addini(
         name="mongo_tz_aware",
@@ -65,6 +67,12 @@ def pytest_addoption(parser: Parser) -> None:
         action="store",
         dest="mongo_host",
         help=_help_host,
+    )
+    parser.addoption(
+        "--mongo-port-search-count",
+        action="store",
+        dest="mongo_port_search_count",
+        help=_help_port_search_count,
     )
 
     parser.addoption("--mongo-port", action="store", dest="mongo_port", help=_help_port)
