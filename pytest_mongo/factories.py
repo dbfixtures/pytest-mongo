@@ -89,8 +89,8 @@ def mongo_proc(
         )
         with mongo_executor:
             yield mongo_executor
-        os.path.exists(mongo_db_path)
-        rmtree(mongo_db_path)
+        if os.path.exists(mongo_db_path):
+            rmtree(mongo_db_path)
 
     return mongo_proc_fixture
 
