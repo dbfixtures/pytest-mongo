@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (C) 2013-2026 by associates authors (see git log).
 
 # This file is part of pytest-mongo.
@@ -15,6 +14,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-mongo.  If not, see <http://www.gnu.org/licenses/>.
-"""pytest-mongo's main module."""
+"""Fixture factories for pytest-mongo."""
 
-__version__ = "3.2.1"
+from pytest_mongo.factories.client import mongodb
+from pytest_mongo.factories.noprocess import mongo_noproc
+from pytest_mongo.factories.process import mongo_proc
+
+__all__ = ("mongodb", "mongo_proc", "mongo_noproc")
