@@ -27,8 +27,8 @@ def mongo_noproc(
         :returns: tcp executor-like object
         """
         config = get_config(request)
-        mongo_host = host or config["host"]
-        mongo_port = port or config["port"] or 27017
+        mongo_host = host or config.host
+        mongo_port = port or config.port or 27017
         assert mongo_port
 
         noop_exec = NoopExecutor(host=mongo_host, port=mongo_port)

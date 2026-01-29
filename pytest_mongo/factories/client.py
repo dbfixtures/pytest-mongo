@@ -33,8 +33,8 @@ def mongodb(
         mongo_tz_aware = False
         if tz_aware is not None:
             mongo_tz_aware = tz_aware
-        elif config["tz_aware"] is not None and isinstance(config["tz_aware"], bool):
-            mongo_tz_aware = config["tz_aware"]
+        elif config.tz_aware is not None and isinstance(config.tz_aware, bool):
+            mongo_tz_aware = config.tz_aware
 
         mongo_host = mongodb_process.host
         mongo_port = mongodb_process.port

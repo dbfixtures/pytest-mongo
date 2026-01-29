@@ -44,15 +44,15 @@ def mongo_proc(
         config = get_config(request)
         tmpdir = gettempdir()
 
-        mongo_exec = executable or config["exec"]
-        mongo_params = params or config["params"]
+        mongo_exec = executable or config.exec
+        mongo_params = params or config.params
 
-        mongo_host = host or config["host"]
+        mongo_host = host or config.host
         assert mongo_host
-        mongo_port = get_port(port) or get_port(config["port"])
+        mongo_port = get_port(port) or get_port(config.port)
         assert mongo_port
 
-        mongo_logsdir = logsdir or config["logsdir"]
+        mongo_logsdir = logsdir or config.logsdir
         mongo_logpath = os.path.join(mongo_logsdir, f"mongo.{mongo_port}.log")
         mongo_db_path = os.path.join(tmpdir, f"mongo.{mongo_port}")
         os.mkdir(mongo_db_path)
