@@ -1,14 +1,11 @@
 """Process fixture factory for pytest-mongo."""
 
-import os
-from shutil import rmtree
-from tempfile import gettempdir
 from typing import Callable, Iterator
 
 import pytest
-from _pytest.fixtures import FixtureRequest
 from mirakuru import TCPExecutor
 from port_for import PortType, get_port
+from pytest import FixtureRequest, TempPathFactory
 
 from pytest_mongo.config import get_config
 
@@ -18,8 +15,7 @@ def mongo_proc(
     params: str | None = None,
     host: str | None = None,
     port: PortType | None = -1,
-    logsdir: str | None = None,
-) -> Callable[[FixtureRequest], Iterator[TCPExecutor]]:
+) -> Callable[[FixtureRequest, TempPathFactory], Iterator[TCPExecutor]]:
     """Mongo process fixture factory.
 
     .. note::
@@ -29,12 +25,13 @@ def mongo_proc(
     :param params: params
     :param host: hostname
     :param port:
-    :param logsdir: path to store log files.
     :returns: function which makes a mongo process
     """
 
     @pytest.fixture(scope="session")
-    def mongo_proc_fixture(request: FixtureRequest) -> Iterator[TCPExecutor]:
+    def mongo_proc_fixture(
+        request: FixtureRequest, tmp_path_factory: TempPathFactory
+    ) -> Iterator[TCPExecutor]:
         """Mongodb process fixture.
 
         :param FixtureRequest request: fixture request object
@@ -42,7 +39,7 @@ def mongo_proc(
         :returns: tcp executor
         """
         config = get_config(request)
-        tmpdir = gettempdir()
+        tmpdir = tmp_path_factory.mktemp(f"pytest-mongo-{request.fixturename}")
 
         mongo_exec = executable or config.exec
         mongo_params = params or config.params
@@ -52,16 +49,15 @@ def mongo_proc(
         mongo_port = get_port(port) or get_port(config.port)
         assert mongo_port
 
-        mongo_logsdir = logsdir or config.logsdir
-        mongo_logpath = os.path.join(mongo_logsdir, f"mongo.{mongo_port}.log")
-        mongo_db_path = os.path.join(tmpdir, f"mongo.{mongo_port}")
-        os.mkdir(mongo_db_path)
+        logfile_path = tmpdir / f"mongo.{mongo_port}.log"
+        db_path = tmpdir / f"db-{mongo_port}"
+        db_path.mkdir()
 
         mongo_executor = TCPExecutor(
             (
                 f"{mongo_exec} --bind_ip {mongo_host} --port {mongo_port} "
-                f"--dbpath {mongo_db_path} "
-                f"--logpath {mongo_logpath} {mongo_params}"
+                f"--dbpath {db_path} "
+                f"--logpath {logfile_path} {mongo_params}"
             ),
             host=mongo_host,
             port=mongo_port,
@@ -69,7 +65,5 @@ def mongo_proc(
         )
         with mongo_executor:
             yield mongo_executor
-        if os.path.exists(mongo_db_path):
-            rmtree(mongo_db_path)
 
     return mongo_proc_fixture

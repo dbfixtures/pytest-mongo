@@ -1,7 +1,6 @@
 """Mongo config getter."""
 
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 from pytest import FixtureRequest
@@ -15,7 +14,6 @@ class MongoConfig:
     host: str
     port: int | None
     params: str
-    logsdir: Path
     tz_aware: bool
 
 
@@ -33,7 +31,6 @@ def get_config(request: FixtureRequest) -> MongoConfig:
         host=get_mongo_option("host"),
         port=int(port) if port else None,
         params=get_mongo_option("params"),
-        logsdir=Path(get_mongo_option("logsdir")),
         tz_aware=get_mongo_option("tz_aware"),
     )
     return cfg

@@ -108,12 +108,6 @@ You can pick which you prefer, but remember that these settings are handled in t
      - port
      - 27017
      - random
-   * - Path to store logs
-     - logsdir
-     - --mongo-logsdir
-     - mongo_logsdir
-     - no
-     - $TMPDIR
    * - Additional parameters
      - params
      - --mongo-params

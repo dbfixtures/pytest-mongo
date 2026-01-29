@@ -17,15 +17,12 @@
 # along with pytest-mongo.  If not, see <http://www.gnu.org/licenses/>.
 """Pytest-mongo plugin definition."""
 
-from tempfile import gettempdir
-
 from pytest import Parser
 
 from pytest_mongo import factories
 
 # pylint:disable=invalid-name
 _help_executable = "Path to MongoDB executable"
-_help_logsdir = "Path to logs directory"
 _help_params = "Additional MongoDB parameters"
 _help_host = "Host at which MongoDB will accept connections"
 _help_port = "Port at which MongoDB will accept connections"
@@ -37,8 +34,6 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addini(name="mongo_exec", help=_help_executable, default="/usr/bin/mongod")
 
     parser.addini(name="mongo_params", help=_help_params, default="")
-
-    parser.addini(name="mongo_logsdir", help=_help_logsdir, default=gettempdir())
 
     parser.addini(name="mongo_host", help=_help_host, default="127.0.0.1")
 
@@ -64,14 +59,6 @@ def pytest_addoption(parser: Parser) -> None:
     )
 
     parser.addoption("--mongo-params", action="store", dest="mongo_params", help=_help_params)
-
-    parser.addoption(
-        "--mongo-logsdir",
-        action="store",
-        metavar="path",
-        dest="mongo_logsdir",
-        help=_help_logsdir,
-    )
 
     parser.addoption(
         "--mongo-host",
