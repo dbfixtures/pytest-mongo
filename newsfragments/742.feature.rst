@@ -1,0 +1,3 @@
+Temporary files for the process are now handled by tmp_path_factory rather than tempfile.gettempdir()
+
+This will result in better test isolation and automatic cleanup.

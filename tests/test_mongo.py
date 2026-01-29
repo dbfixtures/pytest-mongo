@@ -1,7 +1,5 @@
 """pytest-mongo tests collection."""
 
-import os
-
 from mirakuru import TCPExecutor
 from pymongo import MongoClient
 
@@ -45,8 +43,9 @@ def test_mongo_proc(
     mongo_proc: TCPExecutor, mongo_proc2: TCPExecutor, mongo_proc3: TCPExecutor
 ) -> None:
     """Several mongodb processes running."""
-    for mongo in (mongo_proc, mongo_proc2, mongo_proc3):
-        assert os.path.isfile("/tmp/mongo.{port}.log".format(port=mongo.port))
+    assert mongo_proc.running() is True
+    assert mongo_proc2.running() is True
+    assert mongo_proc3.running() is True
 
 
 def test_random_port(mongodb_rand: MongoClient) -> None:
