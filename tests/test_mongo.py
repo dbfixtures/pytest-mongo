@@ -1,5 +1,6 @@
 """pytest-mongo tests collection."""
 
+import pytest
 from mirakuru import TCPExecutor
 from pymongo import MongoClient
 
@@ -15,6 +16,7 @@ def test_mongo(mongodb: MongoClient) -> None:
     assert database.test.find_one()["test1"] == "test1"  # type: ignore
 
 
+@pytest.mark.xdist_group(name="many_mongo")
 def test_third_mongo(mongodb: MongoClient, mongodb2: MongoClient, mongodb3: MongoClient) -> None:
     """Test with everal mongo processes and connections."""
     test_data_one = {
@@ -39,6 +41,7 @@ def test_third_mongo(mongodb: MongoClient, mongodb2: MongoClient, mongodb3: Mong
     assert database.test.find_one()["test3"] == "test3"  # type: ignore
 
 
+@pytest.mark.xdist_group(name="many_mongo")
 def test_mongo_proc(
     mongo_proc: TCPExecutor, mongo_proc2: TCPExecutor, mongo_proc3: TCPExecutor
 ) -> None:

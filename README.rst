@@ -108,6 +108,12 @@ You can pick which you prefer, but remember that these settings are handled in t
      - port
      - 27017
      - random
+   * - Port search count
+     -
+     - --mongo-port-search-count
+     - mongo_port_search_count
+     - -
+     - 5
    * - Additional parameters
      - params
      - --mongo-params

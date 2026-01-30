@@ -1,13 +1,20 @@
 """Process fixture factory for pytest-mongo."""
 
-from typing import Callable, Iterator
+from typing import Callable, Iterable, Iterator
 
 import pytest
 from mirakuru import TCPExecutor
-from port_for import PortType, get_port
+from port_for import PortForException, PortType, get_port
 from pytest import FixtureRequest, TempPathFactory
 
-from pytest_mongo.config import get_config
+from pytest_mongo.config import MongoConfig, get_config
+
+
+def _mongo_port(port: PortType | None, config: MongoConfig, excluded_ports: Iterable[int]) -> int:
+    """User specified port, otherwise find an unused port from config."""
+    pg_port = get_port(port, excluded_ports) or get_port(config.port, excluded_ports)
+    assert pg_port is not None
+    return pg_port
 
 
 def mongo_proc(
@@ -41,13 +48,40 @@ def mongo_proc(
         config = get_config(request)
         tmpdir = tmp_path_factory.mktemp(f"pytest-mongo-{request.fixturename}")
 
+        port_path = tmp_path_factory.getbasetemp()
+        if hasattr(request.config, "workerinput"):
+            port_path = tmp_path_factory.getbasetemp().parent
+
+        n = 0
+        used_ports: set[int] = set()
+        while True:
+            try:
+                mongo_port = _mongo_port(port, config, used_ports)
+                port_filename_path = port_path / f"mongo-{mongo_port}.port"
+                if mongo_port in used_ports:
+                    raise PortForException(
+                        f"Port {mongo_port} already in use, "
+                        f"probably by other instances of the test. "
+                        f"{port_filename_path} is already used."
+                    )
+                used_ports.add(mongo_port)
+                with (port_filename_path).open("x") as port_file:
+                    port_file.write(f"pg_port {mongo_port}\n")
+                break
+            except FileExistsError:
+                n += 1
+                if n >= config.port_search_count:
+                    raise PortForException(
+                        f"Attempted {n} times to select ports. "
+                        f"All attempted ports: {', '.join(map(str, used_ports))} are already "
+                        f"in use, probably by other instances of the test."
+                    )
+
         mongo_exec = executable or config.exec
         mongo_params = params or config.params
 
         mongo_host = host or config.host
         assert mongo_host
-        mongo_port = get_port(port) or get_port(config.port)
-        assert mongo_port
 
         logfile_path = tmpdir / f"mongo.{mongo_port}.log"
         db_path = tmpdir / f"db-{mongo_port}"

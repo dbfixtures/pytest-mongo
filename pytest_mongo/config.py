@@ -13,6 +13,7 @@ class MongoConfig:
     exec: str
     host: str
     port: int | None
+    port_search_count: int
     params: str
     tz_aware: bool
 
@@ -30,6 +31,7 @@ def get_config(request: FixtureRequest) -> MongoConfig:
         exec=get_mongo_option("exec"),
         host=get_mongo_option("host"),
         port=int(port) if port else None,
+        port_search_count=int(get_mongo_option("port_search_count")),
         params=get_mongo_option("params"),
         tz_aware=get_mongo_option("tz_aware"),
     )
