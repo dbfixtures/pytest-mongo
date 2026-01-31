@@ -1,0 +1,1 @@
+Correctly register `--mongo-tz-aware` command-line option with bool type.
