@@ -12,9 +12,9 @@ from pytest_mongo.config import MongoConfig, get_config
 
 def _mongo_port(port: PortType | None, config: MongoConfig, excluded_ports: Iterable[int]) -> int:
     """User specified port, otherwise find an unused port from config."""
-    pg_port = get_port(port, excluded_ports) or get_port(config.port, excluded_ports)
-    assert pg_port is not None
-    return pg_port
+    mongo_port = get_port(port, excluded_ports) or get_port(config.port, excluded_ports)
+    assert mongo_port is not None
+    return mongo_port
 
 
 def mongo_proc(
@@ -66,7 +66,7 @@ def mongo_proc(
                     )
                 used_ports.add(mongo_port)
                 with (port_filename_path).open("x") as port_file:
-                    port_file.write(f"pg_port {mongo_port}\n")
+                    port_file.write(f"mongo_port {mongo_port}\n")
                 break
             except FileExistsError:
                 n += 1
@@ -75,7 +75,7 @@ def mongo_proc(
                         f"Attempted {n} times to select ports. "
                         f"All attempted ports: {', '.join(map(str, used_ports))} are already "
                         f"in use, probably by other instances of the test."
-                    )
+                    ) from None
 
         mongo_exec = executable or config.exec
         mongo_params = params or config.params
