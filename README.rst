@@ -120,9 +120,9 @@ You can pick which you prefer, but remember that these settings are handled in t
      - mongo_params
      - no
      -
-   * - MongoDB client's time zone awarness
+   * - MongoDB client's time zone awarness (override with --mongo-tz-aware/--no-mongo-tz-aware)
      - tz_aware
-     - --mongo-tz-aware
+     - --mongo-tz-aware, --no-mongo-tz-aware
      - mongo_tz_aware
      - no
      - False

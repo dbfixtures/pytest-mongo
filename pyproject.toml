@@ -28,7 +28,7 @@ classifiers = [
     "Framework :: Pytest",
 ]
 dependencies = [
-    "pytest >= 7.0",
+    "pytest >= 8.4",
     "port-for >= 0.7.3",
     "mirakuru >= 2.6.0",
     "pymongo >= 4.10.0",
@@ -96,7 +96,7 @@ showcontent = true
 
 [tool.towncrier.fragment.misc]
 name = "Miscellaneus"
-showcontent = false
+showcontent = true
 
 [tool.tbump.version]
 current = "3.2.1"
