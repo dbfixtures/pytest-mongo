@@ -43,7 +43,9 @@ def pytest_addoption(parser: Parser) -> None:
         help=_help_port,
         default=None,
     )
-    parser.addini(name="mongo_port_search_count", help=_help_port_search_count, default=5)
+    parser.addini(
+        name="mongo_port_search_count", type="int", help=_help_port_search_count, default=5
+    )
 
     parser.addini(
         name="mongo_tz_aware",
@@ -71,6 +73,7 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--mongo-port-search-count",
         action="store",
+        type=int,
         dest="mongo_port_search_count",
         help=_help_port_search_count,
     )
@@ -79,7 +82,7 @@ def pytest_addoption(parser: Parser) -> None:
 
     parser.addoption(
         "--mongo-tz-aware",
-        action="store",
+        action="store_true",
         dest="mongo_tz_aware",
         help=_help_tz_aware,
     )
