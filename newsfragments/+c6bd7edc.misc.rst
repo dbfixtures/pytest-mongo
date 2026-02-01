@@ -1,0 +1,1 @@
+README clarifications and improvements.
