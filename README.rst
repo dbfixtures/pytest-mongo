@@ -25,31 +25,32 @@ pytest-mongo
 What is this?
 =============
 
-This is a pytest plugin, that enables you to test your code that relies on a running MongoDB database.
-It allows you to specify fixtures for MongoDB process and client.
+This is a pytest plugin that helps you test code that relies on a running MongoDB database.
+It provides fixtures for a MongoDB process and client.
 
 How to use
 ==========
 
-Plugin contains two fixtures
+Runtime requirements are defined in ``pyproject.toml``.
 
-* **mongodb** - it's a client fixture that has functional scope, and which cleans MongoDB at the end of each test.
-* **mongo_proc** - session scoped fixture, that starts MongoDB instance at the first use and stops at the end of the tests.
-* **mongo_noproc** - a no process fixture, that's connecting to already
-  running mongodb instance.
-  For example on dockerized test environments, or CI providing mongodb services
+The plugin contains three fixtures:
 
-Simply include one of these fixtures into your tests fixture list.
+* **mongodb** - a function-scoped client fixture that cleans MongoDB at the end of each test.
+* **mongo_proc** - a session-scoped fixture that starts a MongoDB instance on first use and stops it at the end of the test session.
+* **mongo_noproc** - a no-process fixture that connects to an already
+  running MongoDB instance.
+  For example, on dockerized test environments or CI providing MongoDB services.
 
-You can also create additional MongoDB client and process fixtures if you'd need to:
+Simply include one of these fixtures in your test or fixture list.
+
+You can also create additional MongoDB client and process fixtures if you need to:
 
 
 .. code-block:: python
 
     from pytest_mongo import factories
 
-    mongo_my_proc = factories.mongo_proc(
-        port=None, logsdir='/tmp')
+    mongo_my_proc = factories.mongo_proc(port=None)
     mongo_my = factories.mongodb('mongo_my_proc')
 
 .. note::
@@ -57,24 +58,26 @@ You can also create additional MongoDB client and process fixtures if you'd need
     Each MongoDB process fixture can be configured in a different way than the others through the fixture factory arguments.
 
 
-Connecting to already existing mongodb database
------------------------------------------------
+Connecting to an existing MongoDB database
+------------------------------------------
 
-Some projects are using already running MongoDB servers (ie on docker instances).
-In order to connect to them, one would be using the ``mongo_noproc`` fixture.
+Some projects use already running MongoDB servers (e.g., on docker instances).
+To connect to them, use the ``mongo_noproc`` fixture.
+Authentication/URI options are not yet supported (see issue #747).
 
 .. code-block:: python
 
     mongo_external = factories.mongodb('mongo_noproc')
 
-By default the  ``mongo_noproc`` fixture would connect to MongoDB instance using **27017** port. Standard configuration options apply to it.
+By default, the ``mongo_noproc`` fixture connects to a MongoDB instance on port **27017**.
+Standard configuration options apply to it.
 
-These are the configuration options that are working on all levels with the ``mongo_noproc`` fixture:
+The following configuration options apply to the ``mongo_noproc`` fixture as well:
 
 Configuration
 =============
 
-You can define your settings in three ways, it's fixture factory argument, command line option and pytest.ini configuration option.
+You can define settings in three ways: fixture factory argument, command line option, and pytest.ini configuration option.
 You can pick which you prefer, but remember that these settings are handled in the following order:
 
     * ``Fixture factory argument``
@@ -88,7 +91,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - Fixture factory argument
      - Command line option
      - pytest.ini option
-     - Noop process fixture
+     - Applies to ``mongo_noproc``
      - Default
    * - Path to mongodb exec
      - executable
@@ -120,7 +123,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - mongo_params
      - no
      -
-   * - MongoDB client's time zone awarness (override with --mongo-tz-aware/--no-mongo-tz-aware)
+   * - MongoDB client's time zone awareness (override with --mongo-tz-aware/--no-mongo-tz-aware)
      - tz_aware
      - --mongo-tz-aware, --no-mongo-tz-aware
      - mongo_tz_aware
@@ -136,14 +139,21 @@ Example usage:
 
         mongo_proc = factories.mongo_proc(port=8888)
 
+* pass additional ``mongod`` parameters via a single string
+
+    .. code-block:: python
+
+        mongo_proc = factories.mongo_proc(
+            params="--quiet --setParameter diagnosticDataCollectionEnabled=false"
+        )
+
 * use ``--mongo-port`` command line option when you run your tests
 
     .. code-block:: sh
 
-        py.test tests --mongo-port=8888
+        pytest tests --mongo-port=8888
 
-
-* specify your directory as ``mongo_port`` in your ``pytest.ini`` file.
+* specify your port as ``mongo_port`` in your ``pytest.ini`` file.
 
     To do so, put a line like the following under the ``[pytest]`` section of your ``pytest.ini``:
 
@@ -151,6 +161,11 @@ Example usage:
 
         [pytest]
         mongo_port = 8888
+
+Compatibility (tested)
+======================
+
+CI covers MongoDB 7.0 and 8.0; other versions may work but aren't tested.
 
 Package resources
 -----------------
