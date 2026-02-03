@@ -1,0 +1,17 @@
+sequenceDiagram
+    autonumber
+    participant Pytest as Pytest runner
+    participant ProcFactory as mongodb_proc_factory
+    participant MongoServer as MongoDB process
+    participant ClientFactory as mongodb client fixture
+    participant MongoDB as MongoDB databases/collections
+
+    Pytest->>ProcFactory: request mongodb_proc
+    ProcFactory->>MongoServer: start server
+    loop per test
+        Pytest->>ClientFactory: request mongodb client
+        ClientFactory->>MongoServer: connect with MongoClient
+        Pytest->>MongoDB: run test using databases/collections
+        Pytest->>MongoDB: teardown: drop non-system collections
+        Pytest->>ClientFactory: close client
+    end
