@@ -28,6 +28,11 @@ What is this?
 This is a pytest plugin that helps you test code that relies on a running MongoDB database.
 It provides fixtures for a MongoDB process and client.
 
+.. image:: https://raw.githubusercontent.com/dbfixtures/pytest-mongo/main/docs/images/architecture.svg
+    :alt: Project Architecture Diagram
+    :align: center
+
+
 How to use
 ==========
 
