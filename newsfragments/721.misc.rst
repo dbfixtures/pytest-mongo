@@ -1,8 +1,0 @@
-Add tests to check for support of minimum supported versions.
-
-Defined minimum supported versions at:
-
-* pytest - 7.0
-* port-for - 0.7.3
-* mirakuru - 2.6.0
-* pymongo - 4.10.0

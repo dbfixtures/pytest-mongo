@@ -1,1 +1,0 @@
-Drop MongoDB 6 from CI

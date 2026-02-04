@@ -1,1 +1,0 @@
-logsdir is no longer configurable; all temporary files are managed by tmp_path_factory.

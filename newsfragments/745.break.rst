@@ -1,1 +1,0 @@
-Bumped minimum supported pytest version to 8.4

@@ -1,1 +1,0 @@
-Remove Mongo's DBpath only after checking for its existence at the end of the proc fixture.

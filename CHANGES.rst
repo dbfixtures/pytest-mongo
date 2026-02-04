@@ -3,6 +3,67 @@ CHANGELOG
 
 .. towncrier release notes start
 
+pytest-mongo 4.0.0 (2026-02-04)
+===============================
+
+Breaking changes
+----------------
+
+- Drop support for Python 3.9 (`#713 <https://github.com/dbfixtures/pytest-mongo/issues/713>`__)
+- logsdir is no longer configurable; all temporary files are managed by tmp_path_factory. (`#742 <https://github.com/dbfixtures/pytest-mongo/issues/742>`__)
+- Bumped minimum supported pytest version to 8.4 (`#745 <https://github.com/dbfixtures/pytest-mongo/issues/745>`__)
+
+
+Bugfixes
+--------
+
+- Remove Mongo's DBpath only after checking for its existence at the end of the proc fixture. (`#725 <https://github.com/dbfixtures/pytest-mongo/issues/725>`__)
+- Correctly register `--mongo-tz-aware` command-line option with bool type. (`#745 <https://github.com/dbfixtures/pytest-mongo/issues/745>`__)
+
+
+Features
+--------
+
+- Add support for Python 3.14 (`#713 <https://github.com/dbfixtures/pytest-mongo/issues/713>`__)
+- Replace TypedDict-based config with a dataclass-based config. (`#722 <https://github.com/dbfixtures/pytest-mongo/issues/722>`__)
+- Improved xdist compatibility by introducing port-locking mechanism.
+
+  If one worker will claim port, it will lock it, and other xdist workers will
+  either check another port or raise error with clear message. (`#723 <https://github.com/dbfixtures/pytest-mongo/issues/723>`__)
+- Temporary files for the process are now handled by tmp_path_factory rather than tempfile.gettempdir()
+
+  This will result in better test isolation and automatic cleanup. (`#742 <https://github.com/dbfixtures/pytest-mongo/issues/742>`__)
+
+
+Miscellaneus
+------------
+
+- Adjust workflows for actions-reuse 4.1.1 (`#690 <https://github.com/dbfixtures/pytest-mongo/issues/690>`__)
+- Add release workflow to ease release process. (`#712 <https://github.com/dbfixtures/pytest-mongo/issues/712>`__)
+- Add pre-commit hook to check Python version consistency in pyproject.toml. (`#714 <https://github.com/dbfixtures/pytest-mongo/issues/714>`__)
+- Add architecture diagram to the README. (`#715 <https://github.com/dbfixtures/pytest-mongo/issues/715>`__)
+- Add tests to check for support of minimum supported versions.
+
+  Defined minimum supported versions at:
+
+  * pytest - 7.0
+  * port-for - 0.7.3
+  * mirakuru - 2.6.0
+  * pymongo - 4.10.0 (`#721 <https://github.com/dbfixtures/pytest-mongo/issues/721>`__)
+- Run xdist tests on CI with -n auto. (`#723 <https://github.com/dbfixtures/pytest-mongo/issues/723>`__)
+- Replace black with ruff-format.
+
+  Should speed pre-commit up. (`#728 <https://github.com/dbfixtures/pytest-mongo/issues/728>`__)
+- Update pytest configuration options to be toml native, as pytest 9 accepts native toml configuration.
+
+  Created configuration for the tests with the oldest supported packages versions . (`#735 <https://github.com/dbfixtures/pytest-mongo/issues/735>`__)
+- Add --no-mongo-tz-aware CLI flag and document tz-aware override behavior. (`#745 <https://github.com/dbfixtures/pytest-mongo/issues/745>`__)
+- Add basic coderabbit configuration
+- Drop MongoDB 6 from CI
+- README clarifications and improvements.
+- Separated factories into its own source files.
+
+
 3.2.1 (2025-08-01)
 ==================
 
