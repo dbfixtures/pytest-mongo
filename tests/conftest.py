@@ -1,7 +1,6 @@
 """Tests main conftest file."""
 
 from pytest_mongo.factories import client, process
-from pytest_mongo.plugin import *  # noqa: F403
 
 # pylint:disable=invalid-name
 mongo_params = "--noauth"

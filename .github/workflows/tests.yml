@@ -11,6 +11,8 @@ jobs:
     uses: ./.github/workflows/single-mongo.yml
     with:
       mongo: 8.0
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
   mongo_7:
     needs: [mongo_8]
     uses: ./.github/workflows/single-mongo.yml
@@ -18,9 +20,13 @@ jobs:
       mongo: 7.0
       os: ubuntu-22.04
       python-versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
   oldest:
     needs: [mongo_8]
     uses: ./.github/workflows/tests-oldest.yml
     with:
       mongo: 7.0
       os: ubuntu-22.04
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
