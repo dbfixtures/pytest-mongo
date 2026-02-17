@@ -44,11 +44,12 @@ jobs:
       with:
         mongodb-version: ${{ inputs.mongo }}
     - name: Set up Pipenv on python ${{ matrix.python-version }}
-      uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v4.2.1
+      uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v4.4.0
       with:
         python-version: ${{ matrix.python-version }}
         cache: false
         allow-prereleases: true
+        editable: true
     - name: Install oldest supported versions
       uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.2.1
       with:
@@ -64,6 +65,7 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5.5.2
       with:
+        token: ${{ secrets.codecov_token }}
         flags: linux
         env_vars: OS, PYTHON, MONGODB
         fail_ci_if_error: false
