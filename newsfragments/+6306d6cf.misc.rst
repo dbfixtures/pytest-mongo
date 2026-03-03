@@ -1,0 +1,6 @@
+Improve coverage reliability in CI and local runs by switching to ``coverage run``
+with explicit data combining for normal and xdist test runs.
+
+Coverage configuration now uses editable-install-safe include globs and enables
+multiprocessing/subprocess aggregation so spawned code paths are captured
+consistently.
