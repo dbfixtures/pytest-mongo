@@ -7,7 +7,7 @@ name = "pypi"
 pytest = "==9.0.3"
 mirakuru = "==3.0.2"
 port-for = "==1.0.0"
-pymongo = "==4.16.0"
+pymongo = "==4.17.0"
 pytest-mongo = {path = ".", editable = true}
 
 [dev-packages]
