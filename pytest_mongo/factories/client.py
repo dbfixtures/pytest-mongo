@@ -18,6 +18,7 @@ def mongodb(
 
     :param str process_fixture_name: name of the process fixture
     :param bool tz_aware: whether the client to be timezone aware or not
+    :param list databases: list of database names to be cleaned, if None all databases will be cleaned
     :rtype: func
     :returns: function which makes a connection to mongo
     """
@@ -38,6 +39,12 @@ def mongodb(
         elif config.tz_aware is not None and isinstance(config.tz_aware, bool):
             mongo_tz_aware = config.tz_aware
 
+        mongo_databases = None
+        if databases is not None:
+            mongo_databases = databases
+        elif config.databases is not None and isinstance(config.databases, list):
+            mongo_databases = config.databases
+
         mongo_host = mongodb_process.host
         mongo_port = mongodb_process.port
 
@@ -46,7 +53,7 @@ def mongodb(
         yield mongo_conn
 
         for db_name in mongo_conn.list_database_names():
-            if databases and db_name not in databases:
+            if mongo_databases and db_name not in mongo_databases:
                 continue
 
             database = mongo_conn[db_name]

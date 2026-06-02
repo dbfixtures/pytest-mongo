@@ -16,6 +16,7 @@ class MongoConfig:
     port_search_count: int
     params: str
     tz_aware: bool
+    databases: list[str] | None
 
 
 def get_config(request: FixtureRequest) -> MongoConfig:
@@ -34,5 +35,6 @@ def get_config(request: FixtureRequest) -> MongoConfig:
         port_search_count=int(get_mongo_option("port_search_count")),
         params=get_mongo_option("params"),
         tz_aware=get_mongo_option("tz_aware"),
+        databases=get_mongo_option("databases"),
     )
     return cfg
