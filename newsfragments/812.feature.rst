@@ -1,0 +1,2 @@
+Improve mongodb_factory to delete the only provided databases.
+It's useful to run xdist tests in parallel, and avoid deleting databases created by other test workers.
