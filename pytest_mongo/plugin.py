@@ -33,7 +33,7 @@ _help_tz_aware = (
 )
 _help_databases = (
     "List of MongoDB databases to clean in the fixture. Otherwise, all databases "
-    "are cleaned exclude system.*."
+    "are cleaned excluding system.*. collections"
 )
 
 
