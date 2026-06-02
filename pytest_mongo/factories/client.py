@@ -10,7 +10,9 @@ from pytest_mongo.config import get_config
 
 
 def mongodb(
-    process_fixture_name: str, tz_aware: bool | None = None
+    process_fixture_name: str,
+    tz_aware: bool | None = None,
+    databases: list[str] | None = None,
 ) -> Callable[[FixtureRequest], Iterator[MongoClient]]:
     """Mongo database factory.
 
@@ -44,6 +46,9 @@ def mongodb(
         yield mongo_conn
 
         for db_name in mongo_conn.list_database_names():
+            if databases and db_name not in databases:
+                continue
+
             database = mongo_conn[db_name]
             for collection_name in database.list_collection_names():
                 collection = database[collection_name]
