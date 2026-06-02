@@ -18,7 +18,7 @@ def mongodb(
 
     :param str process_fixture_name: name of the process fixture
     :param bool tz_aware: whether the client to be timezone aware or not
-    :param list databases: list of database names to be cleaned, if None all databases will be cleaned
+    :param list databases: list of database names to be cleaned
     :rtype: func
     :returns: function which makes a connection to mongo
     """
