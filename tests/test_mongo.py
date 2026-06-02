@@ -57,6 +57,7 @@ def test_random_port(mongodb_rand: MongoClient) -> None:
     assert "ok" in server_info
     assert server_info["ok"] == 1.0
 
+
 class TestCleanSpecifiedDatabases:
     """Test if only specified databases are cleaned."""
 
