@@ -4,7 +4,7 @@ reviews:
     - path: "newsfragments/*.rst"
       instructions: |
         Validate newsfragment files:
-        1. Read valid types from [tool.towncrier.fragment] in pyproject.toml
+        1. Read valid types from [tool.towncrier.type] in pyproject.toml
         2. Filename must follow the pattern: [number].[type].rst OR +[hash].[type].rst where:
            - [number] is an issue number or PR number
            - [type] must be one of the types defined in towncrier configuration
