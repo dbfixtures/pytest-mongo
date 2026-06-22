@@ -67,12 +67,12 @@ select = [
     "I", # isort
     "D", # pydocstyle
 ]
-
 # Or run some commands after the git tag and the branch
 # have been pushed:
 #  [[tool.tbump.after_push]]
-#  name = "publish"
-#  cmd = "./publish.sh"
+# name = "publish"
+# cmd = "./publish.sh"
+
 [tool.pyproject-fmt]
 column_width = 120
 indent = 4
