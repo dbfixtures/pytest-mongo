@@ -24,12 +24,12 @@ def mongodb(
     :rtype: func
     :returns: function which makes a connection to mongo
     """
-
-    if remove_dbs is not None and keep_dbs is not None and set(remove_dbs).intersection(set(keep_dbs)):
-        raise ValueError(
-            "remove_dbs and keep_dbs cannot have overlapping database names"
-        )
-
+    if (
+        remove_dbs is not None
+        and keep_dbs is not None
+        and set(remove_dbs).intersection(set(keep_dbs))
+    ):
+        raise ValueError("remove_dbs and keep_dbs cannot have overlapping database names")
 
     @pytest.fixture
     def mongodb_factory(request: FixtureRequest) -> Iterator[MongoClient]:
