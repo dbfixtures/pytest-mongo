@@ -13,4 +13,8 @@ mongodb3 = client.mongodb("mongo_proc3")
 
 mongo_proc_rand = process.mongo_proc(port=None, params=mongo_params)
 mongodb_rand = client.mongodb("mongo_proc_rand")
+
+mongo_proc4 = process.mongo_proc(port=27072, params=mongo_params)
+mongodb4 = client.mongodb("mongo_proc4", remove_dbs=["test_db"])
+mongodb5 = client.mongodb("mongo_proc4", keep_dbs=["test_db2"])
 # pylint:enable=invalid-name
