@@ -67,12 +67,14 @@ def pytest_addoption(parser: Parser) -> None:
 
     parser.addini(
         name="mongo_remove_dbs",
+        type="args",
         help=_help_remove_dbs,
         default=[],
     )
 
     parser.addini(
         name="mongo_keep_dbs",
+        type="args",
         help=_help_keep_dbs,
         default=[],
     )
