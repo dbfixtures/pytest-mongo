@@ -1,3 +1,5 @@
+"""Test MongoDB cleanup functionality."""
+
 from pymongo import MongoClient
 
 
