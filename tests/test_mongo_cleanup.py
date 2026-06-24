@@ -19,5 +19,6 @@ def test_clean_specified_databases_again(mongodb5: MongoClient) -> None:
 
 
 def test_keep_specified_databases(mongodb5: MongoClient) -> None:
+    """Test if only specified databases are kept."""
     assert "test_db" not in mongodb5.list_database_names()
     assert "test_db2" in mongodb5.list_database_names()
