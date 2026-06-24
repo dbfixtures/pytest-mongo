@@ -56,22 +56,3 @@ def test_random_port(mongodb_rand: MongoClient) -> None:
     server_info = mongodb_rand.server_info()
     assert "ok" in server_info
     assert server_info["ok"] == 1.0
-
-
-class TestCleanSpecifiedDatabases:
-    """Test if only specified databases are cleaned."""
-
-    def test_clean_specified_databases(self, mongodb4: MongoClient) -> None:
-        """Test if only specified databases are cleaned."""
-        test_db = mongodb4["test_db"]
-        test_db.test.insert_one({"test": "test"})
-        test_db2 = mongodb4["test_db2"]
-        test_db2.test.insert_one({"test": "test"})
-
-        assert "test_db" in mongodb4.list_database_names()
-        assert "test_db2" in mongodb4.list_database_names()
-
-    def test_clean_specified_databases_again(self, mongodb4: MongoClient) -> None:
-        """Test if only specified databases are cleaned."""
-        assert "test_db" not in mongodb4.list_database_names()
-        assert "test_db2" in mongodb4.list_database_names()

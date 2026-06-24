@@ -31,8 +31,12 @@ _help_tz_aware = (
     "Have mongo client timezone aware (ini: mongo_tz_aware; "
     "use --mongo-tz-aware/--no-mongo-tz-aware to override)"
 )
-_help_databases = (
+_help_remove_dbs = (
     "List of MongoDB databases to clean in the fixture. Otherwise, all databases "
+    "are cleaned excluding system.*. collections"
+)
+_help_keep_dbs = (
+    "List of MongoDB databases to keep in the fixture. Otherwise, all databases "
     "are cleaned excluding system.*. collections"
 )
 
@@ -62,8 +66,14 @@ def pytest_addoption(parser: Parser) -> None:
     )
 
     parser.addini(
-        name="mongo_databases",
-        help=_help_databases,
+        name="mongo_remove_dbs",
+        help=_help_remove_dbs,
+        default=[],
+    )
+
+    parser.addini(
+        name="mongo_keep_dbs",
+        help=_help_keep_dbs,
         default=[],
     )
 
@@ -106,9 +116,17 @@ def pytest_addoption(parser: Parser) -> None:
         help=_help_tz_aware,
     )
     parser.addoption(
-        "--mongo-databases",
-        help=_help_databases,
-        dest="mongo_databases",
+        "--mongo-remove-dbs",
+        help=_help_remove_dbs,
+        dest="mongo_remove_dbs",
+        type=str,
+        nargs="*",
+        action="extend",
+    )
+    parser.addoption(
+        "--mongo-keep-dbs",
+        help=_help_keep_dbs,
+        dest="mongo_keep_dbs",
         type=str,
         nargs="*",
         action="extend",
