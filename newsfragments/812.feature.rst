@@ -1,2 +1,3 @@
-Improve mongodb_factory to delete the only provided databases.
+Improve mongodb_factory to keep or delete provided databases.
 It's useful to run xdist tests in parallel, and avoid deleting databases created by other test workers.
+Now you can keep preseed databases which won't be deleted after each test.
