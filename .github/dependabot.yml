@@ -1,7 +1,10 @@
 version: 2
 updates:
 - package-ecosystem: uv
-  directory: "/"
+  directories:
+    - "/"
+  exclude-paths:
+    - "oldest/*"
   schedule:
     interval: daily
     time: "04:15"
@@ -9,7 +12,8 @@ updates:
   cooldown:
     default-days: 7
 - package-ecosystem: github-actions
-  directory: "/"
+  directories:
+    - "/"
   schedule:
     interval: weekly
     time: "04:20"
