@@ -19,7 +19,7 @@ jobs:
     with:
       mongo: 7.0
       os: ubuntu-22.04
-      python-versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
+      python-versions: '["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]'
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
   oldest:
