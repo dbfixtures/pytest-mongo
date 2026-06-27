@@ -95,6 +95,12 @@ sub_table_spacing = "\n"
 
 [tool.pytest]
 addopts = [ "--showlocals", "--verbose" ]
+markers = [
+    """\
+    xdist_group: group tests so they run on the same xdist worker (registered for serial runs where pytest-xdist is \
+    disabled)\
+    """,
+]
 strict_xfail = true
 testpaths = [ "tests" ]
 

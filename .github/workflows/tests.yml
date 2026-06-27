@@ -30,3 +30,8 @@ jobs:
       os: ubuntu-22.04
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
+  auth:
+    needs: [mongo_8]
+    uses: ./.github/workflows/tests-auth.yml
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}

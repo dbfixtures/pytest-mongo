@@ -48,6 +48,12 @@ The plugin contains three fixtures:
 
 Simply include one of these fixtures in your test or fixture list.
 
+Both ``mongo_proc`` and ``mongo_noproc`` support authentication via the ``username``,
+``password``, and ``auth_source`` arguments. When ``username`` is passed to ``mongo_proc``,
+``mongod`` is started with ``--auth`` and the user is created via the MongoDB localhost
+exception, so subsequent connections authenticate with that account. The ``mongo_noproc``
+fixture additionally accepts ``tls`` and a full ``uri`` for connecting to existing servers.
+
 You can also create additional MongoDB client and process fixtures if you need to:
 
 
@@ -68,7 +74,6 @@ Connecting to an existing MongoDB database
 
 Some projects use already running MongoDB servers (e.g., on docker instances).
 To connect to them, use the ``mongo_noproc`` fixture.
-Authentication/URI options are not yet supported (see issue #747).
 
 .. code-block:: python
 
@@ -76,6 +81,29 @@ Authentication/URI options are not yet supported (see issue #747).
 
 By default, the ``mongo_noproc`` fixture connects to a MongoDB instance on port **27017**.
 Standard configuration options apply to it.
+
+The ``mongo_noproc`` fixture also supports authenticated and TLS connections, as well as
+connecting via a full connection URI:
+
+.. code-block:: python
+
+    mongo_auth_proc = factories.mongo_noproc(
+        host="mongo.example.com",
+        port=27017,
+        username="user",
+        password="secret",
+        auth_source="admin",
+        tls=True,
+    )
+    mongo_auth = factories.mongodb("mongo_auth_proc")
+
+When ``uri`` is provided, it takes precedence over the host/port/credential arguments:
+
+.. code-block:: python
+
+    mongo_uri_proc = factories.mongo_noproc(
+        uri="mongodb://<user>:<password>@mongo.example.com:27017/?authSource=admin"
+    )
 
 The following configuration options apply to the ``mongo_noproc`` fixture as well:
 
@@ -133,6 +161,36 @@ You can pick which you prefer, but remember that these settings are handled in t
      - --mongo-tz-aware, --no-mongo-tz-aware
      - mongo_tz_aware
      - no
+     - False
+   * - Username for authentication
+     - username
+     - --mongo-username
+     - mongo_username
+     - yes
+     -
+   * - Password for authentication
+     - password
+     - --mongo-password
+     - mongo_password
+     - yes
+     -
+   * - Authentication database (authSource)
+     - auth_source
+     - --mongo-auth-source
+     - mongo_auth_source
+     - yes
+     - admin
+   * - Full MongoDB connection URI (takes precedence over host/port/credentials)
+     - uri (``mongo_noproc`` only)
+     - --mongo-uri
+     - mongo_uri
+     - yes
+     -
+   * - Enable TLS/SSL (override with --mongo-tls/--no-mongo-tls)
+     - tls (``mongo_noproc`` only)
+     - --mongo-tls, --no-mongo-tls
+     - mongo_tls
+     - yes
      - False
 
 
