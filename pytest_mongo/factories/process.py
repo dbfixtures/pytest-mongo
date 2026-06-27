@@ -5,9 +5,39 @@ from typing import Callable, Iterable, Iterator
 import pytest
 from mirakuru import TCPExecutor
 from port_for import PortForException, PortType, get_port
+from pymongo import MongoClient
 from pytest import FixtureRequest, TempPathFactory
 
 from pytest_mongo.config import MongoConfig, get_config
+
+
+class MongoExecutor(TCPExecutor):
+    """TCPExecutor extended with MongoDB connection and authentication attributes."""
+
+    username: str | None
+    password: str | None
+    auth_source: str | None
+    uri: str | None
+    tls: bool
+
+
+def _create_mongo_user(
+    host: str, port: int, username: str, password: str, auth_source: str
+) -> None:
+    """Create initial MongoDB user via the localhost exception.
+
+    MongoDB permits one unauthenticated connection from localhost before any
+    users exist, even when started with --auth. We use this to seed the first
+    admin account so subsequent connections can authenticate normally.
+    """
+    client: MongoClient = MongoClient(host=host, port=port)
+    client[auth_source].command(
+        "createUser",
+        username,
+        pwd=password,
+        roles=[{"role": "root", "db": auth_source}],
+    )
+    client.close()
 
 
 def _mongo_port(port: PortType | None, config: MongoConfig, excluded_ports: Iterable[int]) -> int:
@@ -22,7 +52,10 @@ def mongo_proc(
     params: str | None = None,
     host: str | None = None,
     port: PortType | None = -1,
-) -> Callable[[FixtureRequest, TempPathFactory], Iterator[TCPExecutor]]:
+    username: str | None = None,
+    password: str | None = None,
+    auth_source: str | None = None,
+) -> Callable[[FixtureRequest, TempPathFactory], Iterator[MongoExecutor]]:
     """Mongo process fixture factory.
 
     .. note::
@@ -32,13 +65,18 @@ def mongo_proc(
     :param params: params
     :param host: hostname
     :param port:
+    :param username: if set, mongod is started with ``--auth`` and this user is
+        created via the localhost exception; subsequent connections authenticate
+        with this account
+    :param password: password for the admin user (required when username is set)
+    :param auth_source: authentication database, defaults to ``"admin"``
     :returns: function which makes a mongo process
     """
 
     @pytest.fixture(scope="session")
     def mongo_proc_fixture(
         request: FixtureRequest, tmp_path_factory: TempPathFactory
-    ) -> Iterator[TCPExecutor]:
+    ) -> Iterator[MongoExecutor]:
         """Mongodb process fixture.
 
         :param FixtureRequest request: fixture request object
@@ -83,21 +121,39 @@ def mongo_proc(
         mongo_host = host or config.host
         assert mongo_host
 
+        mongo_username = username if username is not None else config.username
+        mongo_password = password if password is not None else config.password
+        mongo_auth_source = (
+            auth_source if auth_source is not None else config.auth_source
+        ) or "admin"
+
+        auth_flag = "--auth" if mongo_username else ""
+
         logfile_path = tmpdir / f"mongo.{mongo_port}.log"
         db_path = tmpdir / f"db-{mongo_port}"
         db_path.mkdir()
 
-        mongo_executor = TCPExecutor(
+        mongo_executor = MongoExecutor(
             (
                 f"{mongo_exec} --bind_ip {mongo_host} --port {mongo_port} "
                 f"--dbpath {db_path} "
-                f"--logpath {logfile_path} {mongo_params}"
+                f"--logpath {logfile_path} {mongo_params} {auth_flag}".strip()
             ),
             host=mongo_host,
             port=mongo_port,
             timeout=60,
         )
         with mongo_executor:
+            if mongo_username:
+                assert mongo_password is not None, "password is required when username is set"
+                _create_mongo_user(
+                    mongo_host, mongo_port, mongo_username, mongo_password, mongo_auth_source
+                )
+            mongo_executor.username = mongo_username or None
+            mongo_executor.password = mongo_password or None
+            mongo_executor.auth_source = mongo_auth_source if mongo_username else None
+            mongo_executor.uri = None
+            mongo_executor.tls = False
             yield mongo_executor
 
     return mongo_proc_fixture
