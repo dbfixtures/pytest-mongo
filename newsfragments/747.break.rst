@@ -1,0 +1,2 @@
+NoopExecutor got renamed to MongoNoopExecutor,
+to be in line with newly created MongoExecutor
