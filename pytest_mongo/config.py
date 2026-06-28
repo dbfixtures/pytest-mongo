@@ -16,6 +16,11 @@ class MongoConfig:
     port_search_count: int
     params: str
     tz_aware: bool
+    username: str | None
+    password: str | None
+    auth_source: str | None
+    uri: str | None
+    tls: bool
 
 
 def get_config(request: FixtureRequest) -> MongoConfig:
@@ -34,5 +39,12 @@ def get_config(request: FixtureRequest) -> MongoConfig:
         port_search_count=int(get_mongo_option("port_search_count")),
         params=get_mongo_option("params"),
         tz_aware=get_mongo_option("tz_aware"),
+        username=get_mongo_option("username") or None,
+        password=get_mongo_option("password") or None,
+        auth_source=get_mongo_option("auth_source") or None,
+        uri=get_mongo_option("uri") or None,
+        tls=request.config.getoption("mongo_tls")
+        if request.config.getoption("mongo_tls") is not None
+        else bool(request.config.getini("mongo_tls")),
     )
     return cfg
