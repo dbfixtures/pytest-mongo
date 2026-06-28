@@ -6,7 +6,7 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 
 from pytest_mongo.config import get_config
-from pytest_mongo.executor_noop import NoopExecutor
+from pytest_mongo.executor import MongoNoopExecutor
 
 
 def mongo_noproc(
@@ -17,7 +17,7 @@ def mongo_noproc(
     auth_source: str | None = None,
     uri: str | None = None,
     tls: bool | None = None,
-) -> Callable[[FixtureRequest], Iterator[NoopExecutor]]:
+) -> Callable[[FixtureRequest], Iterator[MongoNoopExecutor]]:
     """MongoDB noprocess factory.
 
     :param host: hostname
@@ -31,7 +31,7 @@ def mongo_noproc(
     """
 
     @pytest.fixture(scope="session")
-    def mongo_noproc_fixture(request: FixtureRequest) -> Iterator[NoopExecutor]:
+    def mongo_noproc_fixture(request: FixtureRequest) -> Iterator[MongoNoopExecutor]:
         """Noop Process fixture for MongoDB.
 
         :param FixtureRequest request: fixture request object
@@ -42,7 +42,7 @@ def mongo_noproc(
         mongo_port = port or config.port or 27017
         assert mongo_port
 
-        noop_exec = NoopExecutor(
+        noop_exec = MongoNoopExecutor(
             host=mongo_host,
             port=mongo_port,
             username=username if username is not None else config.username,

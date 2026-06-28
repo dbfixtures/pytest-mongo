@@ -1,9 +1,42 @@
-"""MongoDB Noop executor providing connection details for mongodb client."""
+"""MongoDB executors providing connection details for mongodb client."""
 
+from typing import Any
+
+from mirakuru import TCPExecutor
 from pymongo import MongoClient
 
 
-class NoopExecutor:  # pylint: disable=too-few-public-methods
+class MongoExecutor(TCPExecutor):
+    """TCPExecutor extended with MongoDB connection and authentication attributes."""
+
+    username: str | None
+    password: str | None
+    auth_source: str | None
+    uri: str | None
+    tls: bool
+
+    def __init__(
+        self,
+        command: str | list[str] | tuple[str, ...],
+        host: str,
+        port: int,
+        username: str | None = None,
+        password: str | None = None,
+        auth_source: str | None = None,
+        uri: str | None = None,
+        tls: bool = False,
+        **kwargs: Any,
+    ) -> None:
+        """Initialize TCPExecutor with MongoDB connection and authentication attributes."""
+        self.username = username
+        self.password = password
+        self.auth_source = auth_source
+        self.uri = uri
+        self.tls = tls
+        super().__init__(command, host, port, **kwargs)
+
+
+class MongoNoopExecutor:  # pylint: disable=too-few-public-methods
     """Nooperator executor.
 
     This executor actually does nothing more than provide connection details

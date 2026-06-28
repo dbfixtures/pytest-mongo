@@ -3,22 +3,12 @@
 from typing import Callable, Iterable, Iterator
 
 import pytest
-from mirakuru import TCPExecutor
 from port_for import PortForException, PortType, get_port
 from pymongo import MongoClient
 from pytest import FixtureRequest, TempPathFactory
 
 from pytest_mongo.config import MongoConfig, get_config
-
-
-class MongoExecutor(TCPExecutor):
-    """TCPExecutor extended with MongoDB connection and authentication attributes."""
-
-    username: str | None
-    password: str | None
-    auth_source: str | None
-    uri: str | None
-    tls: bool
+from pytest_mongo.executor import MongoExecutor
 
 
 def _create_mongo_user(
@@ -134,13 +124,18 @@ def mongo_proc(
         db_path.mkdir()
 
         mongo_executor = MongoExecutor(
-            (
+            command=(
                 f"{mongo_exec} --bind_ip {mongo_host} --port {mongo_port} "
                 f"--dbpath {db_path} "
                 f"--logpath {logfile_path} {mongo_params} {auth_flag}".strip()
             ),
             host=mongo_host,
             port=mongo_port,
+            username=mongo_username or None,
+            password=mongo_password or None,
+            auth_source=mongo_auth_source if mongo_username else None,
+            uri=None,
+            tls=False,
             timeout=60,
         )
         with mongo_executor:
@@ -149,11 +144,6 @@ def mongo_proc(
                 _create_mongo_user(
                     mongo_host, mongo_port, mongo_username, mongo_password, mongo_auth_source
                 )
-            mongo_executor.username = mongo_username or None
-            mongo_executor.password = mongo_password or None
-            mongo_executor.auth_source = mongo_auth_source if mongo_username else None
-            mongo_executor.uri = None
-            mongo_executor.tls = False
             yield mongo_executor
 
     return mongo_proc_fixture
