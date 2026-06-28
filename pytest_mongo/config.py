@@ -43,6 +43,8 @@ def get_config(request: FixtureRequest) -> MongoConfig:
         password=get_mongo_option("password") or None,
         auth_source=get_mongo_option("auth_source") or None,
         uri=get_mongo_option("uri") or None,
-        tls=bool(get_mongo_option("tls")),
+        tls=request.config.getoption("mongo_tls")
+        if request.config.getoption("mongo_tls") is not None
+        else bool(request.config.getini("mongo_tls")),
     )
     return cfg

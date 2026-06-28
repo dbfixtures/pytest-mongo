@@ -119,12 +119,14 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--mongo-tls",
         action="store_true",
+        default=None,
         dest="mongo_tls",
         help=_help_tls,
     )
     parser.addoption(
         "--no-mongo-tls",
         action="store_false",
+        default=None,
         dest="mongo_tls",
         help=_help_tls,
     )
