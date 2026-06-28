@@ -1,8 +1,8 @@
 """MongoDB Noop executor providing connection details for mongodb client."""
 
-from typing import Any
-
 from pymongo import MongoClient
+
+from pytest_mongo.mongoclient import make_mongo_client
 
 
 class MongoNoopExecutor:  # pylint: disable=too-few-public-methods
@@ -42,28 +42,19 @@ class MongoNoopExecutor:  # pylint: disable=too-few-public-methods
         self.tls = tls
         self._version: str | None = None
 
-    def _make_client(self) -> MongoClient:
-        """Build a MongoClient using URI or host/port with optional auth."""
-        if self.uri:
-            return MongoClient(self.uri)
-        kwargs: dict[str, Any] = {
-            "host": self.host,
-            "port": self.port,
-            "tls": self.tls,
-        }
-        if self.username is not None:
-            kwargs["username"] = self.username
-        if self.password is not None:
-            kwargs["password"] = self.password
-        if self.auth_source is not None:
-            kwargs["authSource"] = self.auth_source
-        return MongoClient(**kwargs)
-
     @property
     def version(self) -> str:
         """Get MongoDB's version."""
         if not self._version:
-            client: MongoClient = self._make_client()
+            client: MongoClient = make_mongo_client(
+                self.host,
+                self.port,
+                uri=self.uri,
+                username=self.username,
+                password=self.password,
+                auth_source=self.auth_source,
+                tls=self.tls,
+            )
             server_info = client.server_info()
             self._version = server_info["version"]
         assert self._version

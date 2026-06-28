@@ -7,6 +7,7 @@ from _pytest.fixtures import FixtureRequest
 from pymongo import MongoClient
 
 from pytest_mongo.config import get_config
+from pytest_mongo.mongoclient import make_mongo_client
 
 
 def mongodb(
@@ -44,18 +45,16 @@ def mongodb(
         mongo_auth_source = getattr(mongodb_process, "auth_source", None)
         mongo_tls = getattr(mongodb_process, "tls", False)
 
-        if mongo_uri:
-            mongo_conn: MongoClient = MongoClient(mongo_uri, tz_aware=mongo_tz_aware)
-        else:
-            mongo_conn = MongoClient(
-                mongo_host,
-                mongo_port,
-                tz_aware=mongo_tz_aware,
-                username=mongo_username,
-                password=mongo_password,
-                authSource=mongo_auth_source,
-                tls=mongo_tls,
-            )
+        mongo_conn: MongoClient = make_mongo_client(
+            mongo_host,
+            mongo_port,
+            uri=mongo_uri,
+            username=mongo_username,
+            password=mongo_password,
+            auth_source=mongo_auth_source,
+            tls=mongo_tls,
+            tz_aware=mongo_tz_aware,
+        )
 
         yield mongo_conn
 
