@@ -6,7 +6,7 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 
 from pytest_mongo.config import get_config
-from pytest_mongo.executor import MongoNoopExecutor
+from pytest_mongo.executor_noop import MongoNoopExecutor
 
 
 def mongo_noproc(

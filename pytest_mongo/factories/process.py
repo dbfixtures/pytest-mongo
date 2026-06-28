@@ -4,30 +4,10 @@ from typing import Callable, Iterable, Iterator
 
 import pytest
 from port_for import PortForException, PortType, get_port
-from pymongo import MongoClient
 from pytest import FixtureRequest, TempPathFactory
 
 from pytest_mongo.config import MongoConfig, get_config
 from pytest_mongo.executor import MongoExecutor
-
-
-def _create_mongo_user(
-    host: str, port: int, username: str, password: str, auth_source: str
-) -> None:
-    """Create initial MongoDB user via the localhost exception.
-
-    MongoDB permits one unauthenticated connection from localhost before any
-    users exist, even when started with --auth. We use this to seed the first
-    admin account so subsequent connections can authenticate normally.
-    """
-    client: MongoClient = MongoClient(host=host, port=port)
-    client[auth_source].command(
-        "createUser",
-        username,
-        pwd=password,
-        roles=[{"role": "root", "db": auth_source}],
-    )
-    client.close()
 
 
 def _mongo_port(port: PortType | None, config: MongoConfig, excluded_ports: Iterable[int]) -> int:
@@ -139,11 +119,6 @@ def mongo_proc(
             timeout=60,
         )
         with mongo_executor:
-            if mongo_username:
-                assert mongo_password is not None, "password is required when username is set"
-                _create_mongo_user(
-                    mongo_host, mongo_port, mongo_username, mongo_password, mongo_auth_source
-                )
             yield mongo_executor
 
     return mongo_proc_fixture

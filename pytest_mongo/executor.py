@@ -1,6 +1,6 @@
-"""MongoDB executors providing connection details for mongodb client."""
+"""MongoDB executor providing connection details for mongodb client."""
 
-from typing import Any
+from typing import Any, cast
 
 from mirakuru import TCPExecutor
 from pymongo import MongoClient
@@ -35,63 +35,29 @@ class MongoExecutor(TCPExecutor):
         self.tls = tls
         super().__init__(command, host, port, **kwargs)
 
+    def start(self: "MongoExecutor") -> "MongoExecutor":
+        """Start the MongoDB executor and create the initial admin user if needed."""
+        executor = cast(MongoExecutor, super().start())
+        if self.username and self.password and self.auth_source:
+            self._create_mongo_user(
+                self.host, self.port, self.username, self.password, self.auth_source
+            )
+        return executor
 
-class MongoNoopExecutor:  # pylint: disable=too-few-public-methods
-    """Nooperator executor.
-
-    This executor actually does nothing more than provide connection details
-    for existing MongoDB server. I.E. one already started either on machine
-    or with the use of containerisation like kubernetes or docker compose.
-    """
-
-    def __init__(
-        self,
-        host: str,
-        port: int,
-        username: str | None = None,
-        password: str | None = None,
-        auth_source: str | None = None,
-        uri: str | None = None,
-        tls: bool = False,
+    def _create_mongo_user(
+        self, host: str, port: int, username: str, password: str, auth_source: str
     ) -> None:
-        """Initialize nooperator executor mock.
+        """Create initial MongoDB user via the localhost exception.
 
-        :param host: MongoDB hostname
-        :param port: MongoDB port
-        :param username: MongoDB username for authentication
-        :param password: MongoDB password for authentication
-        :param auth_source: MongoDB authentication database (authSource)
-        :param uri: full MongoDB URI (takes precedence over host/port/credentials when set)
-        :param tls: whether to enable TLS/SSL
+        MongoDB permits one unauthenticated connection from localhost before any
+        users exist, even when started with --auth. We use this to seed the first
+        admin account so subsequent connections can authenticate normally.
         """
-        self.host = host
-        self.port = port
-        self.username = username
-        self.password = password
-        self.auth_source = auth_source
-        self.uri = uri
-        self.tls = tls
-        self._version: str | None = None
-
-    def _make_client(self) -> MongoClient:
-        """Build a MongoClient using URI or host/port with optional auth."""
-        if self.uri:
-            return MongoClient(self.uri)
-        return MongoClient(
-            host=self.host,
-            port=self.port,
-            username=self.username,
-            password=self.password,
-            authSource=self.auth_source,
-            tls=self.tls,
+        client: MongoClient = MongoClient(host=host, port=port)
+        client[auth_source].command(
+            "createUser",
+            username,
+            pwd=password,
+            roles=[{"role": "root", "db": auth_source}],
         )
-
-    @property
-    def version(self) -> str:
-        """Get MongoDB's version."""
-        if not self._version:
-            client: MongoClient = self._make_client()
-            server_info = client.server_info()
-            self._version = server_info["version"]
-        assert self._version
-        return self._version
+        client.close()

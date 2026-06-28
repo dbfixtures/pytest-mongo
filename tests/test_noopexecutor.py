@@ -3,7 +3,7 @@
 from mirakuru import TCPExecutor
 from pymongo import MongoClient
 
-from pytest_mongo.executor import MongoNoopExecutor
+from pytest_mongo.executor_noop import MongoNoopExecutor
 
 
 def test_nooproc_version(mongo_proc: TCPExecutor) -> None:
