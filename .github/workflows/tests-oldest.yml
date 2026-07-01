@@ -45,12 +45,12 @@ jobs:
         python-version: ${{ matrix.python-version }}
         cache: false
     - name: Install oldest supported versions
-      uses: fizyk/actions-reuse/.github/actions/uv-run@67c2d834b83f6a05dd0d398d20d21b79f062d7fa # v5.2.2
+      uses: fizyk/actions-reuse/.github/actions/uv-run@f35c0eab43b88cb5f67a8519eb6dea27146f2145 # v5.2.4
       with:
         command: pip install -r oldest/requirements.txt
     - name: Run tests without xdist
       id: run_serial_tests
-      uses: fizyk/actions-reuse/.github/actions/uv-run@67c2d834b83f6a05dd0d398d20d21b79f062d7fa # v5.2.2
+      uses: fizyk/actions-reuse/.github/actions/uv-run@f35c0eab43b88cb5f67a8519eb6dea27146f2145 # v5.2.4
       with:
         command: python -m coverage run -m pytest -c pyproject.oldest.toml -p no:xdist
         env: '{"COVERAGE_PROCESS_START": ".coveragerc", "COVERAGE_FILE": ".coverage.serial"}'
@@ -62,7 +62,7 @@ jobs:
         output-file: coverage.xml
     - name: Run xdist test
       id: run_xdist_tests
-      uses: fizyk/actions-reuse/.github/actions/uv-run@67c2d834b83f6a05dd0d398d20d21b79f062d7fa # v5.2.2
+      uses: fizyk/actions-reuse/.github/actions/uv-run@f35c0eab43b88cb5f67a8519eb6dea27146f2145 # v5.2.4
       with:
         command: python -m coverage run -m pytest -n auto --dist loadgroup -c pyproject.oldest.toml --max-worker-restart=0
         env: '{"COVERAGE_PROCESS_START": ".coveragerc", "COVERAGE_FILE": ".coverage.xdist"}'
