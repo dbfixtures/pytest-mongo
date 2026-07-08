@@ -1,0 +1,74 @@
+name: Run tests with auth-enabled MongoDB
+
+on:
+  workflow_call:
+    secrets:
+      codecov_token:
+        description: 'Codecov token'
+        required: false
+
+jobs:
+  mongo_auth:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:8.0
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: secret
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Install MongoDB (provides mongod binary for mongo_proc_auth tests)
+      uses: ankane/setup-mongodb@v1
+      with:
+        mongodb-version: "8.0"
+
+    - name: Stop auto-started mongod (port 27017 is reserved for the service container)
+      run: sudo systemctl stop mongod || true
+
+    - name: Run serial tests
+      id: run_serial_tests
+      uses: fizyk/actions-reuse/.github/actions/uv@67c2d834b83f6a05dd0d398d20d21b79f062d7fa # v5.2.2
+      with:
+        python-version: "3.13"
+        command: python -m coverage run -m pytest -p no:xdist
+        env: '{"COVERAGE_PROCESS_START": ".coveragerc", "COVERAGE_FILE": ".coverage.auth.serial", "MONGO_AUTH_ENABLED": "true"}'
+
+    - name: Combine and export serial coverage
+      if: ${{ always() && (steps.run_serial_tests.conclusion == 'success' || steps.run_serial_tests.conclusion == 'failure') }}
+      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@d10cfa3ac0d2a53b405a7a1dcada20eb40a34f08 # v5.2.3
+      with:
+        data-file: .coverage.auth.serial
+        output-file: coverage-auth.xml
+
+    - name: Run xdist tests
+      id: run_xdist_tests
+      uses: fizyk/actions-reuse/.github/actions/uv-run@67c2d834b83f6a05dd0d398d20d21b79f062d7fa # v5.2.2
+      with:
+        command: python -m coverage run -m pytest -n auto --dist loadgroup --max-worker-restart=0
+        env: '{"COVERAGE_PROCESS_START": ".coveragerc", "COVERAGE_FILE": ".coverage.auth.xdist", "MONGO_AUTH_ENABLED": "true"}'
+
+    - name: Combine and export xdist coverage
+      if: ${{ always() && (steps.run_xdist_tests.conclusion == 'success' || steps.run_xdist_tests.conclusion == 'failure') }}
+      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@d10cfa3ac0d2a53b405a7a1dcada20eb40a34f08 # v5.2.3
+      with:
+        data-file: .coverage.auth.xdist
+        output-file: coverage-auth-xdist.xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v7.0.0
+      with:
+        token: ${{ secrets.codecov_token }}
+        flags: linux
+        files: ./coverage-auth.xml,./coverage-auth-xdist.xml
+        fail_ci_if_error: false
