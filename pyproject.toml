@@ -50,7 +50,7 @@ Changelog = "https://github.com/dbfixtures/pytest-mongo/blob/v4.0.0/CHANGES.rst"
 
 [dependency-groups]
 dev = [
-    "coverage==7.14.3",
+    "coverage==7.15.0",
     "mirakuru==3.0.2",
     "mypy==2.1.0; implementation_name=='cpython'",
     "port-for==1.0.0",
