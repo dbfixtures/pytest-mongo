@@ -40,13 +40,13 @@ dependencies = [
 name = "Grzegorz Śliwiński"
 email = "fizyk+pypi@fizyk.dev"
 
-[project.entry-points.pytest11]
-pytest_mongo = "pytest_mongo.plugin"
-
 [project.urls]
 Source = "https://github.com/dbfixtures/pytest-mongo"
 "Bug Tracker" = "https://github.com/dbfixtures/pytest-mongo/issues"
 Changelog = "https://github.com/dbfixtures/pytest-mongo/blob/v4.0.0/CHANGES.rst"
+
+[project.entry-points.pytest11]
+pytest_mongo = "pytest_mongo.plugin"
 
 [dependency-groups]
 dev = [
