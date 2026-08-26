@@ -53,7 +53,7 @@ jobs:
 
     - name: Run xdist tests
       id: run_xdist_tests
-      uses: fizyk/actions-reuse/.github/actions/uv-run@e434952f57d1da48b52d0fe5454b365b2f297d2d # v5.2.6
+      uses: fizyk/actions-reuse/.github/actions/uv-run@42b61e053c1d70a61deb42b323c1a2229e2e7fe0 # v5.5.0
       with:
         command: python -m coverage run -m pytest -n auto --dist loadgroup --max-worker-restart=0
         env: '{"COVERAGE_PROCESS_START": ".coveragerc", "COVERAGE_FILE": ".coverage.auth.xdist", "MONGO_AUTH_ENABLED": "true"}'
