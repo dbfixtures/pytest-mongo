@@ -56,7 +56,7 @@ jobs:
         env: '{"COVERAGE_PROCESS_START": ".coveragerc", "COVERAGE_FILE": ".coverage.serial"}'
     - name: Combine and export serial coverage
       if: ${{ always() && (steps.run_serial_tests.conclusion == 'success' || steps.run_serial_tests.conclusion == 'failure') }}
-      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@d10cfa3ac0d2a53b405a7a1dcada20eb40a34f08 # v5.2.3
+      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@7eefbd6ffc6c6787ad3be6ce93dcf475e3ae99b5 # v5.6.0
       with:
         data-file: .coverage.serial
         output-file: coverage.xml
@@ -68,7 +68,7 @@ jobs:
         env: '{"COVERAGE_PROCESS_START": ".coveragerc", "COVERAGE_FILE": ".coverage.xdist"}'
     - name: Combine and export xdist coverage
       if: ${{ always() && (steps.run_xdist_tests.conclusion == 'success' || steps.run_xdist_tests.conclusion == 'failure') }}
-      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@d10cfa3ac0d2a53b405a7a1dcada20eb40a34f08 # v5.2.3
+      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@7eefbd6ffc6c6787ad3be6ce93dcf475e3ae99b5 # v5.6.0
       with:
         data-file: .coverage.xdist
         output-file: coverage-xdist.xml
