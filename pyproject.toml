@@ -50,7 +50,7 @@ pytest_mongo = "pytest_mongo.plugin"
 
 [dependency-groups]
 dev = [
-    "coverage==7.15.4",
+    "coverage==7.16.0",
     "mirakuru==3.0.2",
     "mypy==2.3.1; implementation_name=='cpython'",
     "port-for==1.0.0",
