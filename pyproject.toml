@@ -74,10 +74,10 @@ line-length = 100
 
 [tool.ruff.lint]
 select = [
+    "D", # pydocstyle
     "E", # pycodestyle
     "F", # pyflakes
     "I", # isort
-    "D", # pydocstyle
 ]
 
 # Or run some commands after the git tag and the branch
