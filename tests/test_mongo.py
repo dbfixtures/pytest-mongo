@@ -11,18 +11,21 @@ def test_mongo(mongodb: MongoClient) -> None:
         "test1": "test1",
     }
 
-    database = mongodb["test_db"]
+    # The packaged fixture manages the default database, `test`.
+    database = mongodb["test"]
     database.test.insert_one(test_data)
     assert database.test.find_one()["test1"] == "test1"  # type: ignore
 
 
 @pytest.mark.xdist_group(name="many_mongo")
-def test_third_mongo(mongodb: MongoClient, mongodb2: MongoClient, mongodb3: MongoClient) -> None:
+def test_third_mongo(
+    mongodb_rand: MongoClient, mongodb2: MongoClient, mongodb3: MongoClient
+) -> None:
     """Test with everal mongo processes and connections."""
     test_data_one = {
         "test1": "test1",
     }
-    database = mongodb["test_db"]
+    database = mongodb_rand["test_db"]
     database.test.insert_one(test_data_one)
     assert database.test.find_one()["test1"] == "test1"  # type: ignore
 

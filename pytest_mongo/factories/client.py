@@ -6,17 +6,25 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 from pymongo import MongoClient
 
+from pytest_mongo._databases import clean_databases, validate_dbs
 from pytest_mongo.config import get_config
 from pytest_mongo.mongoclient import make_mongo_client
 
 
 def mongodb(
-    process_fixture_name: str, tz_aware: bool | None = None
+    process_fixture_name: str,
+    tz_aware: bool | None = None,
+    dbname: str | None = None,
+    dbs: list[str] | None = None,
 ) -> Callable[[FixtureRequest], Iterator[MongoClient]]:
     """Mongo database factory.
 
     :param str process_fixture_name: name of the process fixture
     :param bool tz_aware: whether the client to be timezone aware or not
+    :param str dbname: database this fixture manages and empties at the end of
+        each test, defaulting to the ``mongo_dbname`` setting
+    :param list dbs: further databases to manage alongside ``dbname``, for tests
+        that use more than one database through a single client. Optional.
     :rtype: func
     :returns: function which makes a connection to mongo
     """
@@ -36,6 +44,12 @@ def mongodb(
             mongo_tz_aware = tz_aware
         elif config.tz_aware is not None and isinstance(config.tz_aware, bool):
             mongo_tz_aware = config.tz_aware
+
+        main_database = dbname or config.dbname
+        additional_databases = dbs or config.dbs
+
+        mongo_dbs = [main_database, *additional_databases]
+        validate_dbs(mongo_dbs)
 
         mongo_uri = getattr(mongodb_process, "uri", None)
         mongo_host = mongodb_process.host
@@ -58,13 +72,7 @@ def mongodb(
 
         yield mongo_conn
 
-        for db_name in mongo_conn.list_database_names():
-            database = mongo_conn[db_name]
-            for collection_name in database.list_collection_names():
-                collection = database[collection_name]
-                # Do not delete any of Mongo "system" collections
-                if not collection.name.startswith("system."):
-                    collection.drop()
+        clean_databases(mongo_conn, mongo_dbs)
         mongo_conn.close()
 
     return mongodb_factory
