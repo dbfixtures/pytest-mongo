@@ -80,11 +80,6 @@ select = [
     "I", # isort
 ]
 
-# Or run some commands after the git tag and the branch
-# have been pushed:
-#  [[tool.tbump.after_push]]
-# name = "publish"
-# cmd = "./publish.sh"
 [tool.pyproject-fmt]
 column_width = 120
 indent = 4
@@ -104,22 +99,14 @@ markers = [
 strict_xfail = true
 testpaths = [ "tests" ]
 
-# You can specify a list of commands to
-# run after the files have been patched
-# and before the git commit is made
 [[tool.tbump.before_commit]]
 name = "Build changelog"
 cmd = "uv run towncrier build --version {new_version} --yes"
 
 [[tool.tbump.field]]
-# the name of the field
 name = "extra"
-# the default value to use, if there is no match
 default = ""
 
-# For each file to patch, add a [[file]] config
-# section containing the path of the file, relative to the
-# tbump.toml location.
 [[tool.tbump.file]]
 src = "pytest_mongo/__init__.py"
 
@@ -137,9 +124,6 @@ tag_template = "v{new_version}"
 
 [tool.tbump.version]
 current = "4.0.0"
-# Example of a semver regexp.
-# Make sure this matches current_version before
-# using tbump
 regex = '''
   (?P<major>\d+)
   \.
