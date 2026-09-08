@@ -1,6 +1,6 @@
 """Client fixture factory for pytest-mongo."""
 
-from typing import Callable, Iterator
+from collections.abc import Callable, Iterator
 
 import pytest
 from _pytest.fixtures import FixtureRequest

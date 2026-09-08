@@ -1,6 +1,6 @@
 """Process fixture factory for pytest-mongo."""
 
-from typing import Callable, Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 
 import pytest
 from port_for import PortForException, PortType, get_port
