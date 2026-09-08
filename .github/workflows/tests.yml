@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions: {}
+
 jobs:
   mongo_8:
     uses: ./.github/workflows/single-mongo.yml

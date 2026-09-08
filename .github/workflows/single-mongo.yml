@@ -35,9 +35,11 @@ jobs:
       MONGODB: ${{ inputs.mongo }}
 
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
     - name: Install MongoDB
-      uses: ankane/setup-mongodb@v1
+      uses: ankane/setup-mongodb@a01a9a4888b0b7bb1813656d8653fb2b06ae50d8 # v1
       with:
         mongodb-version: ${{ inputs.mongo }}
     - name: Run test
@@ -66,7 +68,7 @@ jobs:
         data-file: .coverage.xdist
         output-file: coverage-xdist.xml
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v7.0.0
+      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
       with:
         token: ${{ secrets.codecov_token }}
         flags: linux
