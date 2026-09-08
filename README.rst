@@ -107,6 +107,42 @@ When ``uri`` is provided, it takes precedence over the host/port/credential argu
 
 The following configuration options apply to the ``mongo_noproc`` fixture as well:
 
+Managed databases
+=================
+
+By default the ``mongodb`` fixture drops every database it can see at the end of each
+test. That is convenient for a private ``mongod``, but destructive on any instance the
+test session does not own alone: it wipes preseeded data, and when tests run in
+parallel it clears databases belonging to other workers.
+
+Declare the databases a client fixture manages instead, and it will drop only those:
+
+.. code-block:: python
+
+    from pytest_mongo import factories
+
+    mongo_my = factories.mongodb("mongo_proc", dbs=["orders", "customers"])
+
+Everything else on the instance is left alone. ``admin``, ``config`` and ``local``
+are MongoDB's own databases and cannot be declared.
+
+When several xdist workers share one MongoDB instance, give each worker its own
+database names so they never drop each other's data:
+
+.. code-block:: python
+
+    import os
+
+    from pytest_mongo import factories
+
+    worker = os.environ.get("PYTEST_XDIST_WORKER", "master")
+    mongo_my = factories.mongodb("mongo_noproc", dbs=[f"orders-{worker}"])
+
+.. warning::
+
+    Leaving ``dbs`` unset is deprecated and raises a ``DeprecationWarning``. The
+    drop-everything behaviour will be removed in a future major release.
+
 Configuration
 =============
 
@@ -192,6 +228,12 @@ You can pick which you prefer, but remember that these settings are handled in t
      - mongo_tls
      - yes
      - False
+   * - Databases the ``mongodb`` client fixture manages and drops after each test
+     - dbs (``mongodb`` only)
+     - --mongo-dbs (repeatable)
+     - mongo_dbs
+     - yes
+     - all databases (deprecated)
 
 
 Example usage:

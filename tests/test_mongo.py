@@ -5,6 +5,9 @@ from mirakuru import TCPExecutor
 from pymongo import MongoClient
 
 
+# The packaged `mongodb` fixture declares no databases, so its teardown still
+# takes the deprecated drop-everything path. This is the one test left covering
+# it; every other client fixture in this suite declares its `dbs`.
 def test_mongo(mongodb: MongoClient) -> None:
     """Simple test for mongodb connection to the set up process."""
     test_data = {
@@ -17,12 +20,14 @@ def test_mongo(mongodb: MongoClient) -> None:
 
 
 @pytest.mark.xdist_group(name="many_mongo")
-def test_third_mongo(mongodb: MongoClient, mongodb2: MongoClient, mongodb3: MongoClient) -> None:
+def test_third_mongo(
+    mongodb_rand: MongoClient, mongodb2: MongoClient, mongodb3: MongoClient
+) -> None:
     """Test with everal mongo processes and connections."""
     test_data_one = {
         "test1": "test1",
     }
-    database = mongodb["test_db"]
+    database = mongodb_rand["test_db"]
     database.test.insert_one(test_data_one)
     assert database.test.find_one()["test1"] == "test1"  # type: ignore
 

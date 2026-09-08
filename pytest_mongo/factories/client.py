@@ -1,5 +1,6 @@
 """Client fixture factory for pytest-mongo."""
 
+import warnings
 from collections.abc import Callable, Iterator
 
 import pytest
@@ -9,14 +10,79 @@ from pymongo import MongoClient
 from pytest_mongo.config import get_config
 from pytest_mongo.mongoclient import make_mongo_client
 
+#: MongoDB's own databases. pytest-mongo will never manage these.
+RESERVED_DBS = frozenset({"admin", "config", "local"})
+
+DBS_DEPRECATION = (
+    "pytest-mongo dropped every database it found on this MongoDB instance. "
+    "This behaviour is deprecated and will be removed in a future major release, "
+    "because it interferes with databases the test session does not own - most "
+    "notably when tests run in parallel against a shared server. Declare the "
+    "databases the client fixture manages instead, with the `dbs` argument of the "
+    "`mongodb` factory, the `--mongo-dbs` command line option or the `mongo_dbs` "
+    "pytest.ini option; only those will then be dropped."
+)
+
+
+def _resolve_dbs(dbs: list[str] | None, config_dbs: list[str]) -> list[str]:
+    """Resolve which databases a client fixture manages.
+
+    The factory argument wins over the command line and pytest.ini values, which
+    ``config_dbs`` has already collapsed into a single list. An empty result
+    selects the deprecated "drop everything" teardown.
+
+    :param dbs: databases passed to the ``mongodb`` factory
+    :param config_dbs: databases from the command line or pytest.ini
+    :raises ValueError: if a reserved MongoDB database was requested
+    :returns: databases to drop on teardown, empty for the deprecated behaviour
+    """
+    resolved = list(dbs) if dbs else list(config_dbs)
+    reserved = sorted(set(resolved) & RESERVED_DBS)
+    if reserved:
+        raise ValueError(
+            f"pytest-mongo will not manage MongoDB's reserved databases: {', '.join(reserved)}. "
+            "Remove them from the fixture's dbs."
+        )
+    return resolved
+
+
+def _clean_databases(mongo_conn: MongoClient, dbs: list[str]) -> None:
+    """Drop the databases managed by a client fixture.
+
+    Declared databases are dropped whole. With nothing declared, fall back to the
+    deprecated behaviour of emptying every database on the instance, leaving
+    Mongo's own ``system.*`` collections alone.
+
+    :param mongo_conn: connection to clean up through
+    :param dbs: databases to drop, empty for the deprecated behaviour
+    """
+    if dbs:
+        for db_name in dbs:
+            mongo_conn.drop_database(db_name)
+        return
+
+    warnings.warn(DBS_DEPRECATION, DeprecationWarning, stacklevel=2)
+    for db_name in mongo_conn.list_database_names():
+        database = mongo_conn[db_name]
+        for collection_name in database.list_collection_names():
+            collection = database[collection_name]
+            # Do not delete any of Mongo "system" collections
+            if not collection.name.startswith("system."):
+                collection.drop()
+
 
 def mongodb(
-    process_fixture_name: str, tz_aware: bool | None = None
+    process_fixture_name: str,
+    tz_aware: bool | None = None,
+    dbs: list[str] | None = None,
 ) -> Callable[[FixtureRequest], Iterator[MongoClient]]:
     """Mongo database factory.
 
     :param str process_fixture_name: name of the process fixture
     :param bool tz_aware: whether the client to be timezone aware or not
+    :param list dbs: databases this fixture manages, and the only ones it drops
+        at the end of each test. Defaults to dropping every database found on the
+        instance, which is deprecated.
     :rtype: func
     :returns: function which makes a connection to mongo
     """
@@ -36,6 +102,8 @@ def mongodb(
             mongo_tz_aware = tz_aware
         elif config.tz_aware is not None and isinstance(config.tz_aware, bool):
             mongo_tz_aware = config.tz_aware
+
+        mongo_dbs = _resolve_dbs(dbs, config.dbs)
 
         mongo_uri = getattr(mongodb_process, "uri", None)
         mongo_host = mongodb_process.host
@@ -58,13 +126,7 @@ def mongodb(
 
         yield mongo_conn
 
-        for db_name in mongo_conn.list_database_names():
-            database = mongo_conn[db_name]
-            for collection_name in database.list_collection_names():
-                collection = database[collection_name]
-                # Do not delete any of Mongo "system" collections
-                if not collection.name.startswith("system."):
-                    collection.drop()
+        _clean_databases(mongo_conn, mongo_dbs)
         mongo_conn.close()
 
     return mongodb_factory

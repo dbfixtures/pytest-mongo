@@ -1,0 +1,8 @@
+The ``mongodb`` client fixture can now be told which databases it manages, with the
+``dbs`` argument of the ``factories.mongodb`` factory, the ``--mongo-dbs`` command line
+option or the ``mongo_dbs`` pytest.ini option. Only the declared databases are dropped
+at the end of each test, which keeps the fixture from clearing databases the test
+session does not own - preseeded data, or databases belonging to another worker when
+tests run in parallel against a shared MongoDB instance.
+
+MongoDB's own ``admin``, ``config`` and ``local`` databases cannot be declared.
