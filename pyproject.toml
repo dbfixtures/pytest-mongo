@@ -74,10 +74,12 @@ line-length = 100
 
 [tool.ruff.lint]
 select = [
-    "D", # pydocstyle
-    "E", # pycodestyle
-    "F", # pyflakes
-    "I", # isort
+    "D",   # pydocstyle
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # isort
+    "PYI", # flake8-pyi
+    "UP",  # pyupgrade
 ]
 
 [tool.pyproject-fmt]
@@ -87,6 +89,28 @@ keep_full_version = true
 generate_python_version_classifiers = false
 table_format = "long"
 sub_table_spacing = "\n"
+
+[tool.mypy]
+ignore_missing_imports = false
+follow_imports = "silent"
+python_version = "3.11"
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+warn_unreachable = true
+allow_untyped_globals = false
+allow_redefinition = false
+implicit_reexport = false
+strict_equality = true
+pretty = true
+no_implicit_optional = true
+show_error_codes = true
 
 [tool.pytest]
 addopts = [ "--showlocals", "--verbose" ]
