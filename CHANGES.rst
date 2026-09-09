@@ -3,6 +3,49 @@ CHANGELOG
 
 .. towncrier release notes start
 
+pytest-mongo 5.0.0 (2026-09-09)
+===============================
+
+Breaking changes
+----------------
+
+- NoopExecutor got renamed to MongoNoopExecutor,
+  to be in line with newly created MongoExecutor (`#747 <https://github.com/dbfixtures/pytest-mongo/issues/747>`__)
+- Drop support for Python 3.10 (`#887 <https://github.com/dbfixtures/pytest-mongo/issues/887>`__)
+
+
+Features
+--------
+
+- Add authentication support to ``mongo_proc`` and ``mongo_noproc`` via ``username``, ``password``, and ``auth_source``. ``mongo_noproc`` additionally accepts ``tls`` and a full ``uri``. When ``username`` is provided to ``mongo_proc``, ``mongod`` is started with ``--auth`` and the user is created via the localhost exception. Matching ini options and CLI flags are available where supported. (`#747 <https://github.com/dbfixtures/pytest-mongo/issues/747>`__)
+- Add support for Python 3.15 (`#887 <https://github.com/dbfixtures/pytest-mongo/issues/887>`__)
+
+
+Miscellaneus
+------------
+
+- Update the tests, to rely on editable install instead of the source code location. (`#756 <https://github.com/dbfixtures/pytest-mongo/issues/756>`__)
+- Add zizmor to pre-commit and harden GitHub Actions workflow permissions. (`#852 <https://github.com/dbfixtures/pytest-mongo/issues/852>`__)
+- Add release-schedule workflow replacing manual release workflow. (`#865 <https://github.com/dbfixtures/pytest-mongo/issues/865>`__)
+- Migrated the Automerge workflow to `fizyk/actions-reuse` version 5.6.0. (`#870 <https://github.com/dbfixtures/pytest-mongo/issues/870>`__)
+- Add actionlint to pre-commit (`#871 <https://github.com/dbfixtures/pytest-mongo/issues/871>`__)
+- Configure Dependabot to update pre-commit dependencies. (`#873 <https://github.com/dbfixtures/pytest-mongo/issues/873>`__)
+- Turn off autofix_prs and change pre-commit's autoupdate schedule to quarterly (`#882 <https://github.com/dbfixtures/pytest-mongo/issues/882>`__)
+- Enabled ruff's pyupgrade (``UP``) and flake8-pyi (``PYI``) rulesets. (`#890 <https://github.com/dbfixtures/pytest-mongo/issues/890>`__)
+- Apply zizmor autofix (`#892 <https://github.com/dbfixtures/pytest-mongo/issues/892>`__)
+- Moved mypy configuration from ``mypy.ini`` into the ``[tool.mypy]`` table in ``pyproject.toml``. (`#894 <https://github.com/dbfixtures/pytest-mongo/issues/894>`__)
+- Add Python 3.15 to CI
+- Add pyproject-fmt to pre-commit
+- Improve coverage reliability in CI and local runs by switching to ``coverage run``
+  with explicit data combining for normal and xdist test runs.
+
+  Coverage configuration now uses editable-install-safe include globs and enables
+  multiprocessing/subprocess aggregation so spawned code paths are captured
+  consistently.
+- Migrate development environment to uv.
+- Use shared-diagrams workflow.
+
+
 pytest-mongo 4.0.0 (2026-02-04)
 ===============================
 

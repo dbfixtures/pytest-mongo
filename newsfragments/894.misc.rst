@@ -1,1 +1,0 @@
-Moved mypy configuration from ``mypy.ini`` into the ``[tool.mypy]`` table in ``pyproject.toml``.
