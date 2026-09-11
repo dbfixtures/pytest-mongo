@@ -21,6 +21,7 @@ class MongoConfig:
     auth_source: str | None
     uri: str | None
     tls: bool
+    dbs: list[str]
 
 
 def get_config(request: FixtureRequest) -> MongoConfig:
@@ -43,6 +44,7 @@ def get_config(request: FixtureRequest) -> MongoConfig:
         password=get_mongo_option("password") or None,
         auth_source=get_mongo_option("auth_source") or None,
         uri=get_mongo_option("uri") or None,
+        dbs=list(get_mongo_option("dbs")),
         tls=request.config.getoption("mongo_tls")
         if request.config.getoption("mongo_tls") is not None
         else bool(request.config.getini("mongo_tls")),

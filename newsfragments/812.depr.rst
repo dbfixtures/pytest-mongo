@@ -1,0 +1,5 @@
+Dropping every database found on the MongoDB instance is deprecated. A ``mongodb``
+client fixture with no databases declared still empties every non-``system.*``
+collection it can see, but now raises a ``DeprecationWarning`` while doing so. Declare
+the databases the fixture manages to opt into the new behaviour; a future major release
+will make it the only behaviour.
