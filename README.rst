@@ -107,6 +107,47 @@ When ``uri`` is provided, it takes precedence over the host/port/credential argu
 
 The following configuration options apply to the ``mongo_noproc`` fixture as well:
 
+Managed databases
+=================
+
+The ``mongodb`` fixture manages one database - ``test`` by default - and empties it at
+the end of each test by dropping its non-``system.*`` collections. Nothing else on the
+instance is touched, so preseeded data survives and tests running in parallel against a
+shared MongoDB instance do not clear each other's databases.
+
+Point the fixture at a different database with ``dbname``:
+
+.. code-block:: python
+
+    from pytest_mongo import factories
+
+    mongo_my = factories.mongodb("mongo_proc", dbname="orders")
+
+A single ``MongoClient`` can reach every database on the server, so one test may
+legitimately use several. Name the further ones in ``dbs`` and they are managed
+alongside ``dbname``:
+
+.. code-block:: python
+
+    mongo_my = factories.mongodb("mongo_proc", dbname="orders", dbs=["customers"])
+
+``dbs`` is optional, and ``dbname`` on its own is enough for most suites. Collections
+are what gets dropped, so the fixture needs no privileges beyond the ones it has always
+needed. ``admin``, ``config`` and ``local`` are MongoDB's own databases and cannot be
+managed.
+
+When several xdist workers share one MongoDB instance, give each worker its own
+database name so they never clear each other's data:
+
+.. code-block:: python
+
+    import os
+
+    from pytest_mongo import factories
+
+    worker = os.environ.get("PYTEST_XDIST_WORKER", "master")
+    mongo_my = factories.mongodb("mongo_noproc", dbname=f"orders-{worker}")
+
 Configuration
 =============
 
@@ -192,6 +233,18 @@ You can pick which you prefer, but remember that these settings are handled in t
      - mongo_tls
      - yes
      - False
+   * - Database the ``mongodb`` client fixture manages and empties after each test
+     - dbname (``mongodb`` only)
+     - --mongo-dbname
+     - mongo_dbname
+     - yes
+     - test
+   * - Further databases managed alongside ``dbname`` (optional)
+     - dbs (``mongodb`` only)
+     - --mongo-dbs (repeatable)
+     - mongo_dbs
+     - yes
+     -
 
 
 Example usage:

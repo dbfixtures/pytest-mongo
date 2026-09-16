@@ -1,0 +1,3 @@
+The ``mongodb`` client fixture now empties only the database it manages - ``test`` by
+default, set with ``dbname``, ``--mongo-dbname`` or ``mongo_dbname`` - instead of every
+database it can see. Point it at the name your tests use.

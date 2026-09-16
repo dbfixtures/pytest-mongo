@@ -38,6 +38,11 @@ _help_tls = (
     "Enable TLS/SSL for MongoDB connection (ini: mongo_tls; "
     "use --mongo-tls/--no-mongo-tls to override)"
 )
+_help_dbname = "Name of the database the mongodb client fixture manages and empties after each test"
+_help_dbs = (
+    "Further database the mongodb client fixture manages, on top of the one named by "
+    "mongo_dbname. Repeat the option to add several. Optional."
+)
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -108,6 +113,8 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addini(name="mongo_auth_source", help=_help_auth_source, default="")
     parser.addini(name="mongo_uri", help=_help_uri, default="")
     parser.addini(name="mongo_tls", help=_help_tls, type="bool", default=False)
+    parser.addini(name="mongo_dbname", help=_help_dbname, default="test")
+    parser.addini(name="mongo_dbs", help=_help_dbs, type="args", default=[])
 
     parser.addoption("--mongo-username", action="store", dest="mongo_username", help=_help_username)
     parser.addoption("--mongo-password", action="store", dest="mongo_password", help=_help_password)
@@ -128,6 +135,20 @@ def pytest_addoption(parser: Parser) -> None:
         default=None,
         dest="mongo_tls",
         help=_help_tls,
+    )
+    parser.addoption(
+        "--mongo-dbname",
+        action="store",
+        metavar="dbname",
+        dest="mongo_dbname",
+        help=_help_dbname,
+    )
+    parser.addoption(
+        "--mongo-dbs",
+        action="append",
+        metavar="dbname",
+        dest="mongo_dbs",
+        help=_help_dbs,
     )
 
 
