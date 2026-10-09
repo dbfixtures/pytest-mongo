@@ -3,6 +3,31 @@ CHANGELOG
 
 .. towncrier release notes start
 
+pytest-mongo 6.0.0 (2026-10-09)
+===============================
+
+Breaking changes
+----------------
+
+- The ``mongodb`` client fixture now empties only the database it manages - ``test`` by
+  default, set with ``dbname``, ``--mongo-dbname`` or ``mongo_dbname`` - instead of every
+  database it can see. Point it at the name your tests use. (`#812 <https://github.com/dbfixtures/pytest-mongo/issues/812>`__)
+
+
+Features
+--------
+
+- The ``mongodb`` client fixture can manage further databases alongside ``dbname``, for
+  tests that reach several through one client. Name them with ``dbs``, ``--mongo-dbs`` or
+  ``mongo_dbs``. MongoDB's own ``admin``, ``config`` and ``local`` cannot be managed. (`#812 <https://github.com/dbfixtures/pytest-mongo/issues/812>`__)
+
+
+Miscellaneus
+------------
+
+- Adjust shared-automerge permissions (`#913 <https://github.com/dbfixtures/pytest-mongo/issues/913>`__)
+
+
 pytest-mongo 5.0.0 (2026-09-09)
 ===============================
 

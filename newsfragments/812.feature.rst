@@ -1,3 +1,0 @@
-The ``mongodb`` client fixture can manage further databases alongside ``dbname``, for
-tests that reach several through one client. Name them with ``dbs``, ``--mongo-dbs`` or
-``mongo_dbs``. MongoDB's own ``admin``, ``config`` and ``local`` cannot be managed.
