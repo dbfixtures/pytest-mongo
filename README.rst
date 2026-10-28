@@ -105,7 +105,38 @@ When ``uri`` is provided, it takes precedence over the host/port/credential argu
         uri="mongodb://<user>:<password>@mongo.example.com:27017/?authSource=admin"
     )
 
-The following configuration options apply to the ``mongo_noproc`` fixture as well:
+
+Testing against a replica set
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Transactions and change streams need a replica set, and a standalone MongoDB server
+rejects them. A single-member replica set running in Docker is enough for tests. Start
+the container with a replica set name, then initiate the set once:
+
+.. code-block:: sh
+
+    docker run -d --name mongo-rs -p 127.0.0.1:27017:27017 mongo:8.0 --replSet rs0 --bind_ip_all
+    docker exec mongo-rs mongosh --quiet --eval \
+        'rs.initiate({_id: "rs0", members: [{_id: 0, host: "localhost:27017"}]})'
+
+``rs.initiate`` fails while ``mongod`` is still starting, so retry it until it succeeds.
+In Docker Compose or CI, run it from the container's health check.
+
+Connect to the set through ``mongo_noproc`` with a URI naming the replica set:
+
+.. code-block:: python
+
+    mongo_rs = factories.mongodb("mongo_noproc")
+
+.. code-block:: ini
+
+    [pytest]
+    mongo_uri = mongodb://127.0.0.1:27017/?replicaSet=rs0&directConnection=true
+
+``directConnection=true`` keeps the client on the address in the URI. Without it, the
+client switches to the member address stored in the replica set configuration, which is
+the container's own view of itself and is not reachable when the container port is mapped
+to a different port on the host.
 
 Managed databases
 =================
