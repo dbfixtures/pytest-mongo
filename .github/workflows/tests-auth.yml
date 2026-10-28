@@ -9,7 +9,9 @@ on:
 
 jobs:
   mongo_auth:
-    runs-on: ubuntu-latest
+    # mongo:8.0 refuses to start on Linux 6.19+ (SERVER-121912), which
+    # ubuntu-latest now runs.
+    runs-on: ubuntu-22.04
 
     services:
       mongo:
