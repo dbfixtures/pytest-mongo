@@ -109,9 +109,10 @@ When ``uri`` is provided, it takes precedence over the host/port/credential argu
 Testing against a replica set
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Transactions and change streams need a replica set, and a standalone MongoDB server
-rejects them. A single-member replica set running in Docker is enough for tests. Start
-the container with a replica set name, then initiate the set once:
+Transactions and change streams need a replica set or a sharded cluster, and a
+standalone MongoDB server rejects them. A single-member replica set running in Docker is
+enough for tests. Start the container with a replica set name, then initiate the set
+once:
 
 .. code-block:: sh
 
@@ -119,8 +120,9 @@ the container with a replica set name, then initiate the set once:
     docker exec mongo-rs mongosh --quiet --eval \
         'rs.initiate({_id: "rs0", members: [{_id: 0, host: "localhost:27017"}]})'
 
-``rs.initiate`` fails while ``mongod`` is still starting, so retry it until it succeeds.
-In Docker Compose or CI, run it from the container's health check.
+``rs.initiate`` fails while ``mongod`` is still starting, so retry it a limited number of
+times and fail the setup if it never succeeds. In Docker Compose or CI, run it as its own
+step once the container has started, and keep the health check for readiness only.
 
 Connect to the set through ``mongo_noproc`` with a URI naming the replica set:
 
