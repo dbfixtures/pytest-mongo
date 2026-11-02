@@ -36,5 +36,5 @@ def test_tz_aware_flag_overrides_ini(
             assert get_config(request).tz_aware is {expected}
         """
     )
-    result = pytester.runpytest(*cli_args, "-p", "pytest_mongo.plugin", "-p", "no:nonebug")
+    result = pytester.runpytest(*cli_args, "-p", "pytest_mongo.plugin", "--disable-plugin-autoload")
     result.assert_outcomes(passed=1)
