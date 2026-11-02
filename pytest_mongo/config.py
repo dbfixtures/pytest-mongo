@@ -40,7 +40,9 @@ def get_config(request: FixtureRequest) -> MongoConfig:
         port=int(port) if port else None,
         port_search_count=int(get_mongo_option("port_search_count")),
         params=get_mongo_option("params"),
-        tz_aware=get_mongo_option("tz_aware"),
+        tz_aware=request.config.getoption("mongo_tz_aware")
+        if request.config.getoption("mongo_tz_aware") is not None
+        else bool(request.config.getini("mongo_tz_aware")),
         username=get_mongo_option("username") or None,
         password=get_mongo_option("password") or None,
         auth_source=get_mongo_option("auth_source") or None,
