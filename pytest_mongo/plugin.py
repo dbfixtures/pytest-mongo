@@ -98,12 +98,14 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addoption(
         "--mongo-tz-aware",
         action="store_true",
+        default=None,
         dest="mongo_tz_aware",
         help=_help_tz_aware,
     )
     parser.addoption(
         "--no-mongo-tz-aware",
         action="store_false",
+        default=None,
         dest="mongo_tz_aware",
         help=_help_tz_aware,
     )
