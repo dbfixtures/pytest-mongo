@@ -34,23 +34,28 @@ def get_config(request: FixtureRequest) -> MongoConfig:
 
     port = get_mongo_option("port")
 
+    tz_aware_option = request.config.getoption("mongo_tz_aware")
+    tz_aware = (
+        tz_aware_option
+        if tz_aware_option is not None
+        else bool(request.config.getini("mongo_tz_aware"))
+    )
+    tls_option = request.config.getoption("mongo_tls")
+    tls = tls_option if tls_option is not None else bool(request.config.getini("mongo_tls"))
+
     cfg = MongoConfig(
         exec=get_mongo_option("exec"),
         host=get_mongo_option("host"),
         port=int(port) if port else None,
         port_search_count=int(get_mongo_option("port_search_count")),
         params=get_mongo_option("params"),
-        tz_aware=request.config.getoption("mongo_tz_aware")
-        if request.config.getoption("mongo_tz_aware") is not None
-        else bool(request.config.getini("mongo_tz_aware")),
+        tz_aware=tz_aware,
         username=get_mongo_option("username") or None,
         password=get_mongo_option("password") or None,
         auth_source=get_mongo_option("auth_source") or None,
         uri=get_mongo_option("uri") or None,
         dbname=get_mongo_option("dbname"),
         dbs=list(get_mongo_option("dbs")),
-        tls=request.config.getoption("mongo_tls")
-        if request.config.getoption("mongo_tls") is not None
-        else bool(request.config.getini("mongo_tls")),
+        tls=tls,
     )
     return cfg
