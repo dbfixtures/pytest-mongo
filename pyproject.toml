@@ -57,7 +57,7 @@ dev = [
     "psutil==7.2.2",
     "pygments==2.21.0",
     "pymongo==4.19.0",
-    "pytest==9.1.1",
+    "pytest==9.2.0",
     "pytest-xdist==3.8.0",
     "tbump==6.11.0",
     "towncrier==26.9.0",
