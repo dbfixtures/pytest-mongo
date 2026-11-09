@@ -1,1 +1,0 @@
-Document how to test transactions and change streams against a single-member replica set running in Docker, through ``mongo_noproc``.

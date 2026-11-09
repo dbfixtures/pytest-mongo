@@ -3,6 +3,29 @@ CHANGELOG
 
 .. towncrier release notes start
 
+pytest-mongo 6.0.1 (2026-11-09)
+===============================
+
+Bugfixes
+--------
+
+- Fix ``--no-mongo-tz-aware`` to properly override ``mongo_tz_aware = true`` from the ini configuration. (`#946 <https://github.com/dbfixtures/pytest-mongo/issues/946>`__)
+
+
+Documentation
+-------------
+
+- Document how to test transactions and change streams against a single-member replica set running in Docker, through ``mongo_noproc``. (`#280 <https://github.com/dbfixtures/pytest-mongo/issues/280>`__)
+
+
+Miscellaneus
+------------
+
+- Freeze all pre-commit hook revisions to commit SHAs. (`#888 <https://github.com/dbfixtures/pytest-mongo/issues/888>`__)
+- Set dependabot's versioning-strategy explicitly to increase-if-necessary. (`#933 <https://github.com/dbfixtures/pytest-mongo/issues/933>`__)
+- Resolve the TLS and timezone-aware settings before constructing MongoConfig for readability. (`#952 <https://github.com/dbfixtures/pytest-mongo/issues/952>`__)
+
+
 pytest-mongo 6.0.0 (2026-10-09)
 ===============================
 

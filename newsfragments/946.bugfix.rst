@@ -1,1 +1,0 @@
-Fix ``--no-mongo-tz-aware`` to properly override ``mongo_tz_aware = true`` from the ini configuration.
