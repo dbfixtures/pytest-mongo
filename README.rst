@@ -106,6 +106,48 @@ When ``uri`` is provided, it takes precedence over the host/port/credential argu
     )
 
 
+Connecting to a server whose address is known only at runtime
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Factory arguments and settings are fixed before the tests start. When the server's
+address is chosen during the session, such as a container on a free port, write your own
+session-scoped process fixture and pass its name to ``factories.mongodb``. Any object with
+``host`` and ``port`` attributes works, so a mirakuru executor can both start the
+container and serve as the process fixture:
+
+.. code-block:: python
+
+    import pytest
+    from mirakuru import TCPExecutor
+    from port_for import select_random
+
+    from pytest_mongo import factories
+
+
+    @pytest.fixture(scope="session")
+    def mongo_docker():
+        port = select_random()
+        executor = TCPExecutor(
+            ["docker", "run", "--rm", "-p", f"127.0.0.1:{port}:27017", "mongo:8.0"],
+            host="127.0.0.1",
+            port=port,
+            timeout=60,
+        )
+        with executor:
+            yield executor
+
+
+    mongo_in_docker = factories.mongodb("mongo_docker")
+
+When mirakuru stops the executor, ``docker run`` passes the signal on to the container,
+and ``--rm`` removes it.
+
+When another fixture already supplies the address, return a ``MongoNoopExecutor`` from
+``pytest_mongo.executor_noop`` instead. The ``mongodb`` client fixture also reads
+``username``, ``password``, ``auth_source``, ``uri`` and ``tls`` from the process fixture
+when present, and ``MongoNoopExecutor`` accepts all of them.
+
+
 Testing against a replica set
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
