@@ -13,6 +13,9 @@ jobs:
     uses: $/.github/workflows/single-mongo.yml
     with:
       mongo: 8.0
+      # MongoDB publishes no mongodb-org 8.0 package for ubuntu-26.04, which
+      # ubuntu-latest now runs.
+      os: ubuntu-24.04
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
   mongo_7:
