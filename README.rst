@@ -117,6 +117,8 @@ container and serve as the process fixture:
 
 .. code-block:: python
 
+    import subprocess
+
     import pytest
     from mirakuru import TCPExecutor
     from port_for import select_random
@@ -127,20 +129,29 @@ container and serve as the process fixture:
     @pytest.fixture(scope="session")
     def mongo_docker():
         port = select_random()
+        name = f"pytest-mongo-{port}"
         executor = TCPExecutor(
-            ["docker", "run", "--rm", "-p", f"127.0.0.1:{port}:27017", "mongo:8.0"],
+            ["docker", "run", "--rm", "--name", name,
+             "-p", f"127.0.0.1:{port}:27017", "mongo:8.0"],
             host="127.0.0.1",
             port=port,
             timeout=60,
+            stdout=subprocess.DEVNULL,
         )
-        with executor:
-            yield executor
+        try:
+            with executor:
+                yield executor
+        finally:
+            subprocess.run(["docker", "rm", "-f", name], capture_output=True)
 
 
     mongo_in_docker = factories.mongodb("mongo_docker")
 
-When mirakuru stops the executor, ``docker run`` passes the signal on to the container,
-and ``--rm`` removes it.
+``stdout=subprocess.DEVNULL`` discards the server's log output, which would otherwise
+fill mirakuru's unread pipe and stall the container. When the server is not ready within
+the timeout, mirakuru kills ``docker run`` without stopping the container, so the
+``finally`` block removes it by name. Pull the image beforehand, or the download counts
+towards the timeout.
 
 When another fixture already supplies the address, return a ``MongoNoopExecutor`` from
 ``pytest_mongo.executor_noop`` instead. The ``mongodb`` client fixture also reads
