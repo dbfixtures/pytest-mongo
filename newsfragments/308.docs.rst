@@ -1,0 +1,1 @@
+Document how to connect to a MongoDB server whose address another fixture supplies at runtime, such as a container on a random port.
